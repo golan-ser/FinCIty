@@ -95,14 +95,6 @@
         .dashboard-scroll::-webkit-scrollbar-track { background: transparent; }
         .dashboard-scroll::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
 
-        .cta-blend-card {
-            background:
-                radial-gradient(circle at 85% 8%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 45%),
-                linear-gradient(140deg, #3b82f6 0%, #2563eb 55%, #38bdf8 100%);
-            border: 1px solid rgba(147, 197, 253, 0.5);
-            box-shadow: 0 18px 36px -24px rgba(37, 99, 235, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.16);
-        }
-
     </style>
 </head>
 <body>
@@ -148,7 +140,7 @@
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center reveal" style="transition-delay: 0.2s">
-                <button class="btn-modern bg-slate-900 text-white px-8 md:px-12 py-4 md:py-5 rounded-2xl text-base md:text-lg font-bold w-full sm:w-auto shadow-2xl">תאמו פגישת אפיון</button>
+                <a href="#pilot" data-scroll-to-pilot class="btn-modern inline-flex items-center justify-center bg-slate-900 text-white px-8 md:px-12 py-4 md:py-5 rounded-2xl text-base md:text-lg font-bold w-full sm:w-auto shadow-2xl">תאמו פגישת אפיון</a>
                 <button class="btn-modern bg-white text-slate-900 border border-slate-200 px-8 md:px-12 py-4 md:py-5 rounded-2xl text-base md:text-lg font-bold w-full sm:w-auto hover:bg-slate-50">איך זה עובד?</button>
             </div>
         </div>
@@ -308,22 +300,16 @@
                 </div>
 
                 <!-- Secondary Items -->
-                <div class="md:col-span-1 xl:col-span-2 bento-item bento-soft reveal h-full min-h-[190px]" style="transition-delay: 0.2s">
+                <div class="md:col-span-1 xl:col-span-3 bento-item bento-soft reveal h-full min-h-[190px]" style="transition-delay: 0.2s">
                     <i class="fas fa-bolt text-blue-600 text-2xl md:text-3xl mb-4 md:mb-6"></i>
                     <h4 class="font-black text-lg md:text-xl mb-2 text-slate-900">זיהוי חריגות</h4>
                     <p class="text-slate-500 text-xs md:text-sm">התראות אוטומטיות על תב"רים ללא תנועה לפני שמאבדים תקציבים.</p>
                 </div>
                 
-                <div class="md:col-span-1 xl:col-span-2 bento-item bento-soft reveal h-full min-h-[190px]" style="transition-delay: 0.3s">
+                <div class="md:col-span-1 xl:col-span-3 bento-item bento-soft reveal h-full min-h-[190px]" style="transition-delay: 0.3s">
                     <i class="fas fa-shield-heart text-blue-600 text-2xl md:text-3xl mb-4 md:mb-6"></i>
                     <h4 class="font-black text-lg md:text-xl mb-2 text-slate-900">אמינות הנתונים</h4>
                     <p class="text-slate-500 text-xs md:text-sm">צמצום טעויות אנוש בהזנה ובניית "אמת ארגונית אחת".</p>
-                </div>
-
-                <div class="md:col-span-2 xl:col-span-2 bento-item bento-soft cta-blend-card text-white reveal h-full min-h-[190px]" style="transition-delay: 0.4s">
-                    <h4 class="font-black text-lg md:text-xl mb-3 md:mb-4">הצטרפו למהפכה</h4>
-                    <p class="text-blue-50/90 text-xs md:text-sm mb-6">היו הרשות הראשונה שמאמצת ניהול כספים מבוסס AI.</p>
-                    <button class="w-full py-3 bg-white/95 text-blue-700 rounded-xl font-bold text-xs md:text-sm shadow-sm">שריינו מקום</button>
                 </div>
             </div>
         </div>
@@ -360,7 +346,8 @@
             <h2 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 md:mb-8 leading-tight">מוכנים להוביל את <span class="text-blue-600">השינוי?</span></h2>
             <p class="text-lg md:text-xl text-slate-500 mb-8 md:mb-12 max-w-2xl mx-auto font-medium">אנחנו מחפשים שותפים לדרך. הצטרפו ל-5 הרשויות הראשונות שכבר שם.</p>
             
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-stretch max-w-lg mx-auto">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-stretch max-w-2xl mx-auto">
+                <input type="text" placeholder="שם הרשות" class="px-6 md:px-8 py-4 md:py-5 rounded-2xl border border-slate-200 focus:border-blue-500 outline-none flex-grow text-base md:text-lg font-medium">
                 <input type="email" placeholder="דוא״ל של הרשות" class="px-6 md:px-8 py-4 md:py-5 rounded-2xl border border-slate-200 focus:border-blue-500 outline-none flex-grow text-base md:text-lg font-medium">
                 <button class="btn-modern bg-blue-600 text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl text-lg md:text-xl font-bold">שלחו בקשה</button>
             </div>
