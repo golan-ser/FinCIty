@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://fincity.co.il/sitemap.xml
