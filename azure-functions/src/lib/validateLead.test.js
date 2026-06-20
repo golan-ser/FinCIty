@@ -6,33 +6,33 @@ test("accepts required fields only", () => {
     const result = normalizeLead({
         fullName: "ישראל ישראלי",
         email: "test@example.com",
-        municipality: "עיריית דוגמה"
+        municipality: " עיריית דוגמה"
     });
 
-    assert.equal(result.error, undefined);
-    assert.equal(result.lead.fullName, "ישראל ישראלי");
-    assert.equal(result.lead.role, "");
-    assert.equal(result.lead.phone, "");
+    assert.strictEqual(result.error, undefined);
+    assert.strictEqual(result.lead.fullName, "ישראל ישראלי");
+    assert.strictEqual(result.lead.role, "");
+    assert.strictEqual(result.lead.phone, "");
 });
 
 test("accepts optional fields when provided", () => {
     const result = normalizeLead({
         fullName: "ישראל ישראלי",
         email: "test@example.com",
-        municipality: "עיריית דוגמה",
+        municipality: " עיריית דוגמה",
         role: "גזבר",
         phone: "050-0000000"
     });
 
-    assert.equal(result.lead.role, "גזבר");
-    assert.equal(result.lead.phone, "050-0000000");
+    assert.strictEqual(result.lead.role, "גזבר");
+    assert.strictEqual(result.lead.phone, "050-0000000");
 });
 
 test("rejects invalid email", () => {
     const result = normalizeLead({
         fullName: "ישראל ישראלי",
         email: "not-an-email",
-        municipality: "עיריית דוגמה"
+        municipality: " עיריית דוגמה"
     });
 
     assert.match(result.error, /מייל/);
@@ -51,6 +51,33 @@ test("supports legacy payload keys", () => {
         authority: "Legacy City"
     });
 
-    assert.equal(result.lead.fullName, "Legacy Name");
-    assert.equal(result.lead.municipality, "Legacy City");
+    assert.strictEqual(result.lead.fullName, "Legacy Name");
+    assert.strictEqual(result.lead.municipality, "Legacy City");
+});
+
+test("accepts submission without phone", () => {
+    const result = normalizeLead({
+        fullName: "ישראל ישראלי",
+        email: "test@example.com",
+        municipality: "חיפה",
+        role: "",
+        phone: ""
+    });
+
+    assert.strictEqual(result.error, undefined);
+    assert.strictEqual(result.lead.phone, "");
+});
+
+test("auto reply template uses updated copy", () => {
+    const { buildAutoReplyEmail } = require("../templates/autoReplyEmail");
+    const email = buildAutoReplyEmail({
+        lead: { fullName: "דנה כהן", municipality: "חיפה" },
+        replyToEmail: "team@example.com"
+    });
+
+    assert.match(email.subject, /פנייתך/);
+    assert.match(email.html, /שלו/);
+    assert.match(email.html, /מנכ/);
+    assert.match(email.text, /נבחן/);
+    assert.strictEqual(email.senderDisplayName, "שלו | Fincity");
 });

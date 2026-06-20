@@ -2,8 +2,7 @@ const { app } = require("@azure/functions");
 const { normalizeLead, formatTimestamp } = require("../lib/validateLead");
 const { parseJsonBody } = require("../lib/parseBody");
 const { getMailConfig, sendEmail } = require("../lib/mail");
-const { buildInternalEmail } = require("../templates/internalEmail");
-const { buildAutoReplyEmail } = require("../templates/autoReplyEmail");
+const { sendLeadEmails } = require("../lib/sendLeadEmails");
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -52,28 +51,13 @@ app.http("sendLead", {
 
         try {
             const mailConfig = getMailConfig();
-            const internalEmail = buildInternalEmail({ lead, submittedAt });
-            const autoReplyEmail = buildAutoReplyEmail({
+
+            await sendLeadEmails({
+                mailConfig,
                 lead,
-                replyToEmail: mailConfig.replyTo
-            });
-
-            await sendEmail(mailConfig.client, mailConfig.senderAddress, {
-                to: mailConfig.internalTo,
-                subject: internalEmail.subject,
-                text: internalEmail.text,
-                html: internalEmail.html,
-                replyTo: lead.email,
-                replyToDisplayName: lead.fullName
-            });
-
-            await sendEmail(mailConfig.client, mailConfig.senderAddress, {
-                to: lead.email,
-                subject: autoReplyEmail.subject,
-                text: autoReplyEmail.text,
-                html: autoReplyEmail.html,
-                replyTo: mailConfig.replyTo,
-                replyToDisplayName: "צוות Fincity"
+                submittedAt,
+                sendEmailFn: sendEmail,
+                logFn: (message) => context.log(message)
             });
 
             context.log(`Lead submitted for municipality: ${lead.municipality}`);

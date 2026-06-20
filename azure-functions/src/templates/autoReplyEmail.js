@@ -7,12 +7,32 @@ function escapeHtml(value) {
         .replace(/'/g, "&#39;");
 }
 
-function buildAutoReplyEmail({ lead, replyToEmail }) {
-    const greetingName = lead.fullName ? escapeHtml(lead.fullName) : "";
-    const greeting = greetingName ? `שלום ${greetingName},` : "שלום,";
-    const municipality = escapeHtml(lead.municipality);
-    const replyTo = encodeURIComponent(replyToEmail);
-    const subject = "קיבלנו את הפנייה שלך ל־Fincity";
+function buildCtaBlock(replyToEmail) {
+    if (replyToEmail) {
+        return `<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto 32px;">
+  <tr>
+    <td align="center" bgcolor="#2563EB" style="border-radius:12px;">
+      <a href="mailto:${escapeHtml(replyToEmail)}" style="display:inline-block;padding:14px 28px;font-size:15px;font-weight:700;color:#FFFFFF;text-decoration:none;border-radius:12px;background-color:#2563EB;">ניתן להשיב למייל זה להשלמת פרטים</a>
+    </td>
+  </tr>
+</table>`;
+    }
+
+    return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 32px;">
+  <tr>
+    <td align="center" style="padding:14px 20px;background-color:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;font-size:15px;font-weight:700;color:#2563EB;text-align:center;">
+      ניתן להשיב למייל זה להשלמת פרטים
+    </td>
+  </tr>
+</table>`;
+}
+
+function buildAutoReplyEmail({ lead, replyToEmail = "" } = {}) {
+    const fullName = lead?.fullName ? escapeHtml(lead.fullName) : null;
+    const greeting = fullName ? `שלום ${fullName},` : "שלום,";
+    const municipality = escapeHtml(lead?.municipality || "");
+    const subject = "קיבלנו את פנייתך ל־Fincity";
+    const ctaBlock = buildCtaBlock(replyToEmail);
 
     const html = `<!DOCTYPE html>
 <html lang="he" dir="rtl">
@@ -22,52 +42,46 @@ function buildAutoReplyEmail({ lead, replyToEmail }) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>${subject}</title>
 </head>
-<body style="margin:0;padding:0;background-color:#F6F8FB;font-family:'Segoe UI',Tahoma,Arial,Helvetica,sans-serif;color:#0F172A;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#F6F8FB;">
+<body style="margin:0;padding:0;background-color:#F8FAFC;font-family:'Segoe UI',Tahoma,Arial,Helvetica,sans-serif;color:#0F172A;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#F8FAFC;">
     <tr>
       <td align="center" style="padding:32px 16px;">
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:640px;">
           <tr>
-            <td align="center" style="padding-bottom:20px;">
-              <span style="display:inline-block;font-size:24px;font-weight:900;color:#2563EB;letter-spacing:-0.5px;">Fincity</span>
+            <td align="center" style="padding-bottom:24px;">
+              <span style="display:block;font-size:26px;font-weight:900;color:#2563EB;letter-spacing:-0.5px;margin-bottom:8px;">Fincity</span>
+              <span style="display:inline-block;padding:6px 12px;background-color:#EFF6FF;border:1px solid #BFDBFE;border-radius:999px;font-size:12px;font-weight:700;color:#2563EB;">AI לניהול תב&quot;רים</span>
             </td>
           </tr>
           <tr>
-            <td style="background-color:#FFFFFF;border:1px solid #E2E8F0;border-radius:20px;overflow:hidden;box-shadow:0 12px 32px rgba(15,23,42,0.06);">
+            <td style="background-color:#FFFFFF;border:1px solid #E2E8F0;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(15,23,42,0.05);">
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td style="height:4px;background:linear-gradient(90deg,#2563EB 0%,#06B6D4 100%);font-size:0;line-height:0;">&nbsp;</td>
+                  <td style="height:4px;background-color:#2563EB;font-size:0;line-height:0;">&nbsp;</td>
                 </tr>
                 <tr>
-                  <td style="padding:36px 32px 28px;text-align:right;">
-                    <h1 style="margin:0 0 10px;font-size:28px;line-height:1.3;font-weight:900;color:#0F172A;">הפנייה התקבלה</h1>
-                    <p style="margin:0 0 28px;font-size:16px;line-height:1.7;color:#64748B;font-weight:600;">נחזור אליך בהקדם לתיאום שיחה קצרה</p>
+                  <td style="padding:36px 32px 32px;text-align:right;">
+                    <h1 style="margin:0 0 8px;font-size:26px;line-height:1.35;font-weight:900;color:#0F172A;">הפנייה התקבלה</h1>
+                    <p style="margin:0 0 28px;font-size:15px;line-height:1.7;color:#64748B;font-weight:600;">נבחן את הפנייה וניצור קשר בהתאם</p>
 
-                    <p style="margin:0 0 16px;font-size:16px;line-height:1.8;color:#334155;">${greeting}</p>
-                    <p style="margin:0 0 16px;font-size:16px;line-height:1.8;color:#334155;">תודה שפנית אלינו בנוגע ל־Fincity.</p>
-                    <p style="margin:0 0 16px;font-size:16px;line-height:1.8;color:#334155;">קיבלנו את הפרטים של <strong style="color:#0F172A;">${municipality}</strong>, ונחזור אליך בהקדם לתיאום שיחה קצרה והבנת הצורך אצלכם.</p>
-                    <p style="margin:0 0 24px;font-size:16px;line-height:1.8;color:#334155;">Fincity היא מערכת AI לניהול תב&quot;רים, הרשאות, מסמכים ודיווחים — במטרה לעזור לרשויות לעבוד בצורה מסודרת, מהירה ושקופה יותר מול גורמי מימון ומשרדי ממשלה.</p>
+                    <p style="margin:0 0 16px;font-size:16px;line-height:1.85;color:#334155;">${greeting}</p>
+                    <p style="margin:0 0 16px;font-size:16px;line-height:1.85;color:#334155;">תודה שפנית אלינו בנוגע ל־Fincity.</p>
+                    <p style="margin:0 0 16px;font-size:16px;line-height:1.85;color:#334155;">קיבלנו את פנייתך מטעם <strong style="color:#0F172A;">${municipality}</strong>, ונבחן אותה בהתאם לצרכים שעלו ולשלב ההתאמה של הרשות למערכת.</p>
+                    <p style="margin:0 0 16px;font-size:16px;line-height:1.85;color:#334155;">Fincity היא מערכת AI לניהול תב&quot;רים, הרשאות, מסמכים, דיווחים ומעקב תקציבי — במטרה לעזור לרשויות לעבוד בצורה פשוטה, מסודרת וחכמה יותר, ולרכז במקום אחד את המידע, המסמכים והמשימות הקשורות לתקציבים ייעודיים.</p>
+                    <p style="margin:0 0 24px;font-size:16px;line-height:1.85;color:#334155;">לאחר בחינת הפנייה, ניצור קשר במידת הצורך לצורך היכרות קצרה, הבנת הצרכים והצגת האפשרויות הרלוונטיות עבורכם.</p>
 
-                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 28px;background-color:#F8FAFC;border:1px solid #E2E8F0;border-radius:14px;">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 28px;background-color:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;">
                       <tr>
-                        <td style="padding:16px 18px;font-size:15px;line-height:1.6;color:#475569;text-align:right;">
-                          <span style="display:block;font-size:12px;font-weight:700;color:#64748B;margin-bottom:4px;">הרשות</span>
+                        <td style="padding:16px 18px;text-align:right;">
+                          <span style="display:block;font-size:12px;font-weight:700;color:#64748B;margin-bottom:4px;">רשות</span>
                           <span style="font-size:17px;font-weight:800;color:#0F172A;">${municipality}</span>
                         </td>
                       </tr>
                     </table>
 
-                    <p style="margin:0 0 24px;font-size:15px;line-height:1.8;color:#475569;">אם נוח לך, אפשר להשיב למייל הזה עם זמן מועדף לשיחה או מספר טלפון לחזרה.</p>
+                    ${ctaBlock}
 
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto 28px;">
-                      <tr>
-                        <td align="center" bgcolor="#2563EB" style="border-radius:14px;">
-                          <a href="mailto:${escapeHtml(replyToEmail)}" style="display:inline-block;padding:14px 28px;font-size:16px;font-weight:800;color:#FFFFFF;text-decoration:none;border-radius:14px;background-color:#2563EB;">השיבו למייל לתיאום שיחה</a>
-                        </td>
-                      </tr>
-                    </table>
-
-                    <p style="margin:0;font-size:16px;line-height:1.8;color:#334155;">בברכה,<br><strong style="color:#0F172A;">צוות Fincity</strong></p>
+                    <p style="margin:0;font-size:16px;line-height:1.85;color:#334155;">בברכה,<br><strong style="color:#0F172A;">שלו</strong><br><span style="color:#64748B;font-size:15px;">מנכ&quot;ל Fincity</span></p>
                   </td>
                 </tr>
               </table>
@@ -90,22 +104,26 @@ function buildAutoReplyEmail({ lead, replyToEmail }) {
         "",
         "תודה שפנית אלינו בנוגע ל־Fincity.",
         "",
-        `קיבלנו את הפרטים של ${lead.municipality}, ונחזור אליך בהקדם לתיאום שיחה קצרה והבנת הצורך אצלכם.`,
+        `קיבלנו את פנייתך מטעם ${lead?.municipality || ""}, ונבחן אותה בהתאם לצרכים שעלו ולשלב ההתאמה של הרשות למערכת.`,
         "",
-        "Fincity היא מערכת AI לניהול תב\"רים, הרשאות, מסמכים ודיווחים — במטרה לעזור לרשויות לעבוד בצורה מסודרת, מהירה ושקופה יותר מול גורמי מימון ומשרדי ממשלה.",
+        "Fincity היא מערכת AI לניהול תב\"רים, הרשאות, מסמכים, דיווחים ומעקב תקציבי — במטרה לעזור לרשויות לעבוד בצורה פשוטה, מסודרת וחכמה יותר, ולרכז במקום אחד את המידע, המסמכים והמשימות הקשורות לתקציבים ייעודיים.",
         "",
-        `הרשות: ${lead.municipality}`,
+        "לאחר בחינת הפנייה, ניצור קשר במידת הצורך לצורך היכרות קצרה, הבנת הצרכים והצגת האפשרויות הרלוונטיות עבורכם.",
         "",
-        "אם נוח לך, אפשר להשיב למייל הזה עם זמן מועדף לשיחה או מספר טלפון לחזרה.",
+        `רשות: ${lead?.municipality || ""}`,
+        "",
+        "ניתן להשיב למייל זה להשלמת פרטים",
         "",
         "בברכה,",
-        "צוות Fincity"
+        "שלו",
+        "מנכ\"ל Fincity"
     ].join("\n");
 
     return {
         subject,
         html,
-        text
+        text,
+        senderDisplayName: "שלו | Fincity"
     };
 }
 
