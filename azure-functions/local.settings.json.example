@@ -1,0 +1,15 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AZURE_EMAIL_CONNECTION_STRING": "endpoint=https://...;accesskey=...",
+    "MAIL_FROM": "DoNotReply@fincity.co.il",
+    "MAIL_INTERNAL_TO": "team@yourdomain.com",
+    "MAIL_REPLY_TO": "team@yourdomain.com"
+  },
+  "Host": {
+    "CORS": "*",
+    "CORSCredentials": false
+  }
+}
