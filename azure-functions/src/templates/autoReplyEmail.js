@@ -7,32 +7,20 @@ function escapeHtml(value) {
         .replace(/'/g, "&#39;");
 }
 
-function buildCtaBlock(replyToEmail) {
-    if (replyToEmail) {
-        return `<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto 32px;">
-  <tr>
-    <td align="center" bgcolor="#2563EB" style="border-radius:12px;">
-      <a href="mailto:${escapeHtml(replyToEmail)}" style="display:inline-block;padding:14px 28px;font-size:15px;font-weight:700;color:#FFFFFF;text-decoration:none;border-radius:12px;background-color:#2563EB;">ניתן להשיב למייל זה להשלמת פרטים</a>
-    </td>
-  </tr>
-</table>`;
+function getFirstName(fullName) {
+    const trimmed = String(fullName || "").trim();
+    if (!trimmed) {
+        return null;
     }
 
-    return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 32px;">
-  <tr>
-    <td align="center" style="padding:14px 20px;background-color:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;font-size:15px;font-weight:700;color:#2563EB;text-align:center;">
-      ניתן להשיב למייל זה להשלמת פרטים
-    </td>
-  </tr>
-</table>`;
+    return trimmed.split(/\s+/)[0];
 }
 
 function buildAutoReplyEmail({ lead, replyToEmail = "" } = {}) {
-    const fullName = lead?.fullName ? escapeHtml(lead.fullName) : null;
-    const greeting = fullName ? `שלום ${fullName},` : "שלום,";
+    const firstName = getFirstName(lead?.fullName);
+    const greeting = firstName ? `שלום ${escapeHtml(firstName)},` : "שלום,";
     const municipality = escapeHtml(lead?.municipality || "");
     const subject = "קיבלנו את פנייתך ל־Fincity";
-    const ctaBlock = buildCtaBlock(replyToEmail);
 
     const html = `<!DOCTYPE html>
 <html lang="he" dir="rtl">
@@ -78,8 +66,6 @@ function buildAutoReplyEmail({ lead, replyToEmail = "" } = {}) {
                       </tr>
                     </table>
 
-                    ${ctaBlock}
-
                     <p style="margin:0;font-size:16px;line-height:1.85;color:#334155;">בברכה,<br><strong style="color:#0F172A;">שלו</strong><br><span style="color:#64748B;font-size:15px;">מנכ&quot;ל Fincity</span></p>
                   </td>
                 </tr>
@@ -110,8 +96,6 @@ function buildAutoReplyEmail({ lead, replyToEmail = "" } = {}) {
         "לאחר בחינת הפנייה, ניצור קשר במידת הצורך לצורך היכרות קצרה, הבנת הצרכים והצגת האפשרויות הרלוונטיות עבורכם.",
         "",
         `רשות: ${lead?.municipality || ""}`,
-        "",
-        "ניתן להשיב למייל זה להשלמת פרטים",
         "",
         "בברכה,",
         "שלו",

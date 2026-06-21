@@ -75,9 +75,8 @@ test("auto reply template uses updated copy", () => {
         replyToEmail: "team@example.com"
     });
 
-    assert.match(email.subject, /פנייתך/);
-    assert.match(email.html, /שלו/);
-    assert.match(email.html, /מנכ/);
-    assert.match(email.text, /נבחן/);
+    assert.match(email.html, /שלום דנה,/);
+    assert.match(email.html, /חיפה/);
+    assert.doesNotMatch(email.html, /להשלמת פרטים/);
     assert.strictEqual(email.senderDisplayName, "שלו | Fincity");
 });
