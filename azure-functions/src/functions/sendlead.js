@@ -3,18 +3,13 @@ const { normalizeLead, formatTimestamp } = require("../lib/validateLead");
 const { parseJsonBody } = require("../lib/parseBody");
 const { getMailConfig, sendEmail } = require("../lib/mail");
 const { sendLeadEmails } = require("../lib/sendLeadEmails");
+const { getCorsHeaders } = require("../lib/cors");
 
-const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type"
-};
-
-function jsonResponse(status, body) {
+function jsonResponse(request, status, body) {
     return {
         status,
         headers: {
-            ...corsHeaders,
+            ...getCorsHeaders(request),
             "Content-Type": "application/json; charset=utf-8"
         },
         jsonBody: body
@@ -26,6 +21,8 @@ app.http("sendLead", {
     authLevel: "anonymous",
     route: "sendlead",
     handler: async (request, context) => {
+        const corsHeaders = getCorsHeaders(request);
+
         if (request.method === "OPTIONS") {
             return {
                 status: 204,
@@ -38,12 +35,12 @@ app.http("sendLead", {
             body = await parseJsonBody(request);
         } catch (error) {
             context.log("Invalid JSON payload received.");
-            return jsonResponse(400, { error: "Invalid request body." });
+            return jsonResponse(request, 400, { error: "Invalid request body." });
         }
 
         const validation = normalizeLead(body);
         if (validation.error) {
-            return jsonResponse(400, { error: validation.error });
+            return jsonResponse(request, 400, { error: validation.error });
         }
 
         const { lead } = validation;
@@ -62,10 +59,10 @@ app.http("sendLead", {
 
             context.log(`Lead emails sent. lead=${lead.email}, municipality=${lead.municipality}`);
 
-            return jsonResponse(200, { success: true });
+            return jsonResponse(request, 200, { success: true });
         } catch (error) {
             context.log(`Failed to send lead emails: ${error?.message || error}`);
-            return jsonResponse(500, { error: "Failed to process lead submission." });
+            return jsonResponse(request, 500, { error: "Failed to process lead submission." });
         }
     }
 });

@@ -2,8 +2,6 @@ const { buildInternalEmail } = require("../templates/internalEmail");
 const { buildAutoReplyEmail } = require("../templates/autoReplyEmail");
 const { buildCeoNotificationEmail } = require("../templates/ceoNotificationEmail");
 
-const DEFAULT_CEO_TO = "shalevroz4@gmail.com";
-
 async function sendLeadEmails({ mailConfig, lead, submittedAt, sendEmailFn, logFn = () => {} } = {}) {
     const internalEmail = buildInternalEmail({ lead, submittedAt });
     const autoReplyEmail = buildAutoReplyEmail({
@@ -11,7 +9,7 @@ async function sendLeadEmails({ mailConfig, lead, submittedAt, sendEmailFn, logF
         replyToEmail: mailConfig.replyTo
     });
     const ceoEmail = buildCeoNotificationEmail({ lead });
-    const ceoTo = mailConfig.ceoTo || DEFAULT_CEO_TO;
+    const ceoTo = mailConfig.ceoTo;
 
     await sendEmailFn(mailConfig.client, mailConfig.senderAddress, {
         to: mailConfig.internalTo,
@@ -28,27 +26,30 @@ async function sendLeadEmails({ mailConfig, lead, submittedAt, sendEmailFn, logF
         text: autoReplyEmail.text,
         html: autoReplyEmail.html,
         replyTo: mailConfig.replyTo,
-        replyToDisplayName: autoReplyEmail.senderDisplayName || "שלו | Fincity"
+        replyToDisplayName: mailConfig.replyToDisplayName
     });
 
     let ceoNotified = false;
 
-    try {
-        await sendEmailFn(mailConfig.client, mailConfig.senderAddress, {
-            to: ceoTo,
-            subject: ceoEmail.subject,
-            text: ceoEmail.text,
-            html: ceoEmail.html
-        });
-        ceoNotified = true;
-    } catch (error) {
-        logFn("CEO notification email failed.");
+    if (!ceoTo) {
+        logFn("CEO notification skipped: MAIL_CEO_TO is not configured.");
+    } else {
+        try {
+            await sendEmailFn(mailConfig.client, mailConfig.senderAddress, {
+                to: ceoTo,
+                subject: ceoEmail.subject,
+                text: ceoEmail.text,
+                html: ceoEmail.html
+            });
+            ceoNotified = true;
+        } catch (error) {
+            logFn("CEO notification email failed.");
+        }
     }
 
-    return { ceoNotified, ceoTo };
+    return { ceoNotified, ceoTo: ceoTo || null };
 }
 
 module.exports = {
-    DEFAULT_CEO_TO,
     sendLeadEmails
 };

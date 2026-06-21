@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { DEFAULT_CEO_TO, sendLeadEmails } = require("./sendLeadEmails");
+const { sendLeadEmails } = require("./sendLeadEmails");
 
 const lead = {
     fullName: "ישראל ישראלי",
@@ -15,6 +15,7 @@ const mailConfig = {
     senderAddress: "noreply@fincity.co.il",
     internalTo: "team@example.com",
     replyTo: "team@example.com",
+    replyToDisplayName: "שלו | Fincity",
     ceoTo: "ceo@example.com"
 };
 
@@ -44,22 +45,27 @@ test("sends internal, lead auto-reply, and ceo emails", async () => {
     assert.strictEqual(calls[0].to, "team@example.com");
     assert.strictEqual(calls[1].to, "lead@example.com");
     assert.match(calls[1].html, /שלום ישראל,/);
+    assert.strictEqual(calls[1].replyToDisplayName, "שלו | Fincity");
     assert.strictEqual(calls[2].to, "ceo@example.com");
     assert.match(calls[2].subject, /Fincity/);
     assert.strictEqual(result.ceoNotified, true);
 });
 
-test("uses ceo fallback when MAIL_CEO_TO is missing", async () => {
+test("skips ceo email when MAIL_CEO_TO is missing", async () => {
     const { calls, sendEmailFn } = createRecorder();
+    const logs = [];
 
-    await sendLeadEmails({
-        mailConfig: { ...mailConfig, ceoTo: undefined },
+    const result = await sendLeadEmails({
+        mailConfig: { ...mailConfig, ceoTo: "" },
         lead,
         submittedAt: "21.6.2026, 12:00:00",
-        sendEmailFn
+        sendEmailFn,
+        logFn: (message) => logs.push(message)
     });
 
-    assert.strictEqual(calls[2].to, DEFAULT_CEO_TO);
+    assert.strictEqual(calls.length, 2);
+    assert.strictEqual(result.ceoNotified, false);
+    assert.match(logs.join(" "), /MAIL_CEO_TO is not configured/);
 });
 
 test("returns success when only ceo email fails", async () => {
