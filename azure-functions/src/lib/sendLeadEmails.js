@@ -28,8 +28,7 @@ async function sendLeadEmails({ mailConfig, lead, submittedAt, sendEmailFn, logF
         text: autoReplyEmail.text,
         html: autoReplyEmail.html,
         replyTo: mailConfig.replyTo,
-        replyToDisplayName: autoReplyEmail.senderDisplayName || "שלו | Fincity",
-        senderDisplayName: autoReplyEmail.senderDisplayName || "שלו | Fincity"
+        replyToDisplayName: autoReplyEmail.senderDisplayName || "שלו | Fincity"
     });
 
     let ceoNotified = false;
@@ -39,8 +38,7 @@ async function sendLeadEmails({ mailConfig, lead, submittedAt, sendEmailFn, logF
             to: ceoTo,
             subject: ceoEmail.subject,
             text: ceoEmail.text,
-            html: ceoEmail.html,
-            senderDisplayName: ceoEmail.senderDisplayName
+            html: ceoEmail.html
         });
         ceoNotified = true;
     } catch (error) {

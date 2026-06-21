@@ -64,7 +64,7 @@ app.http("sendLead", {
 
             return jsonResponse(200, { success: true });
         } catch (error) {
-            context.log("Failed to send lead emails.");
+            context.log(`Failed to send lead emails: ${error?.message || error}`);
             return jsonResponse(500, { error: "Failed to process lead submission." });
         }
     }

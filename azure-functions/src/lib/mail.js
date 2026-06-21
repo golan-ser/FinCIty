@@ -22,11 +22,9 @@ function getMailConfig() {
     };
 }
 
-async function sendEmail(client, senderAddress, { to, subject, text, html, replyTo, replyToDisplayName, senderDisplayName } = {}) {
+async function sendEmail(client, senderAddress, { to, subject, text, html, replyTo, replyToDisplayName } = {}) {
     const message = {
-        senderAddress: senderDisplayName
-            ? { address: senderAddress, displayName: senderDisplayName }
-            : senderAddress,
+        senderAddress,
         content: {
             subject,
             plainText: text,

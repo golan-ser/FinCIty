@@ -43,8 +43,9 @@ test("sends internal, lead auto-reply, and ceo emails", async () => {
     assert.strictEqual(calls.length, 3);
     assert.strictEqual(calls[0].to, "team@example.com");
     assert.strictEqual(calls[1].to, "lead@example.com");
+    assert.match(calls[1].html, /שלום ישראל ישראלי,/);
     assert.strictEqual(calls[2].to, "ceo@example.com");
-    assert.strictEqual(calls[2].senderDisplayName, "Fincity Leads");
+    assert.match(calls[2].subject, /Fincity/);
     assert.strictEqual(result.ceoNotified, true);
 });
 
