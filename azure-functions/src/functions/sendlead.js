@@ -60,7 +60,7 @@ app.http("sendLead", {
                 logFn: (message) => context.log(message)
             });
 
-            context.log(`Lead submitted for municipality: ${lead.municipality}`);
+            context.log(`Lead emails sent. lead=${lead.email}, municipality=${lead.municipality}`);
 
             return jsonResponse(200, { success: true });
         } catch (error) {

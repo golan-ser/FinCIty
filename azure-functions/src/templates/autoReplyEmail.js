@@ -62,9 +62,8 @@ function buildAutoReplyEmail({ lead, replyToEmail = "" } = {}) {
                 <tr>
                   <td style="padding:36px 32px 32px;text-align:right;">
                     <h1 style="margin:0 0 8px;font-size:26px;line-height:1.35;font-weight:900;color:#0F172A;">הפנייה התקבלה</h1>
-                    <p style="margin:0 0 28px;font-size:15px;line-height:1.7;color:#64748B;font-weight:600;">נבחן את הפנייה וניצור קשר בהתאם</p>
-
-                    <p style="margin:0 0 16px;font-size:16px;line-height:1.85;color:#334155;">${greeting}</p>
+                    <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#64748B;font-weight:600;">נבחן את הפנייה וניצור קשר בהתאם</p>
+                    <p style="margin:0 0 24px;font-size:20px;line-height:1.6;font-weight:800;color:#0F172A;">${greeting}</p>
                     <p style="margin:0 0 16px;font-size:16px;line-height:1.85;color:#334155;">תודה שפנית אלינו בנוגע ל־Fincity.</p>
                     <p style="margin:0 0 16px;font-size:16px;line-height:1.85;color:#334155;">קיבלנו את פנייתך מטעם <strong style="color:#0F172A;">${municipality}</strong>, ונבחן אותה בהתאם לצרכים שעלו ולשלב ההתאמה של הרשות למערכת.</p>
                     <p style="margin:0 0 16px;font-size:16px;line-height:1.85;color:#334155;">Fincity היא מערכת AI לניהול תב&quot;רים, הרשאות, מסמכים, דיווחים ומעקב תקציבי — במטרה לעזור לרשויות לעבוד בצורה פשוטה, מסודרת וחכמה יותר, ולרכז במקום אחד את המידע, המסמכים והמשימות הקשורות לתקציבים ייעודיים.</p>
