@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { normalizeLead } = require("../lib/validateLead");
+const { normalizeLead } = require("./validateLead");
 
 test("accepts required fields only", () => {
     const result = normalizeLead({
@@ -75,9 +75,27 @@ test("auto reply template uses updated copy", () => {
         replyToEmail: "team@example.com"
     });
 
-    assert.match(email.html, /שלום דנה/);
+    assert.match(email.html, /שלום דנה כהן/);
+    assert.match(email.html, /max-width:640px/);
     assert.match(email.html, /finCity-logotext\.png/);
-    assert.match(email.html, /מנכ&quot;ל/);
+    assert.match(email.html, /פרטי הפנייה/);
+    assert.match(email.html, /עבור <strong[^>]*>חיפה<\/strong>/);
+    assert.match(email.html, /מנכ&quot;ל&#8206;/);
+    assert.doesNotMatch(email.html, /מטעם/);
     assert.doesNotMatch(email.html, /להשלמת פרטים/);
+    assert.doesNotMatch(email.html, /undefined/);
     assert.strictEqual(email.senderDisplayName, "שלו | Fincity");
+    assert.match(email.text, /מנכ"ל Fincity/);
+    assert.match(email.text, /עבור חיפה/);
+});
+
+test("auto reply template handles missing optional lead fields", () => {
+    const { buildAutoReplyEmail } = require("../templates/autoReplyEmail");
+    const email = buildAutoReplyEmail({
+        lead: { fullName: "", municipality: "" }
+    });
+
+    assert.match(email.html, /שלום,/);
+    assert.doesNotMatch(email.html, /undefined/);
+    assert.doesNotMatch(email.text, /undefined/);
 });
