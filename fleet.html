@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinCity Fleet – ניהול צי רכב חכם עם AI לרשויות וארגונים</title>
+    <meta name="description" content="FinCity Fleet — מערכת ניהול צי רכב עם חיפוש AI בשפה חופשית: רכבים, נהגים, טסטים, ביטוחים, טיפולים ועלויות במקום אחד. חלק מפלטפורמת FinCity לרשויות מקומיות.">
+
+    <!-- Fonts (self-hosted) -->
+    <link rel="stylesheet" href="assets/vendor/fonts.css">
+
+    <!-- Icons (self-hosted) -->
+    <link rel="stylesheet" href="assets/vendor/css/fontawesome.min.css">
+
+    <!-- Tailwind (static build) + Theme -->
+    <link rel="stylesheet" href="assets/css/tailwind.css">
+    <link rel="stylesheet" href="assets/css/theme.css">
+</head>
+<body>
+
+    <div class="bg-void"></div>
+    <div class="bg-aurora"></div>
+    <div class="bg-grid"></div>
+
+    <!-- ================= NAV ================= -->
+    <nav class="fixed top-0 w-full z-50 px-4 md:px-6 py-3 md:py-5">
+        <div class="max-w-7xl mx-auto nav-glass rounded-2xl px-4 md:px-6 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 md:gap-3">
+                <img src="finCity-logo_only.png" alt="FinCity symbol" class="h-8 md:h-10 w-auto">
+                <img src="finCity-logotext.png" alt="FinCity wordmark" class="h-6 md:h-8 w-auto brightness-0 invert opacity-90">
+            </a>
+
+            <div class="hidden lg:flex gap-10 text-sm font-bold text-slate-400">
+                <a href="#features" class="hover:text-emerald-300 transition-colors">היכולות</a>
+                <a href="#fleet-live" class="hover:text-emerald-300 transition-colors">המערכת</a>
+                <a href="index.html#security" class="hover:text-emerald-300 transition-colors">אבטחה ופרטיות</a>
+                <a href="index.html#platform" class="hover:text-emerald-300 transition-colors">הפלטפורמה</a>
+                <a href="index.html" class="text-cyan-300 hover:text-cyan-200 transition-colors">ניהול תב"רים ←</a>
+            </div>
+
+            <a href="#contact" class="btn-glow inline-flex items-center justify-center px-4 md:px-7 py-2 md:py-3 rounded-xl text-xs md:text-sm font-black" style="background:linear-gradient(90deg,#10b981 0%,#34d399 100%);color:#022c22">
+                תיאום הדגמה
+            </a>
+        </div>
+    </nav>
+
+    <!-- ================= HERO ================= -->
+    <header id="hero" class="relative min-h-screen flex flex-col justify-center overflow-hidden pt-28 pb-16 px-6">
+        <div class="absolute inset-0 z-0"><canvas id="hero-particles"></canvas></div>
+        <div class="absolute inset-0 z-[1] pointer-events-none" id="float-docs" aria-hidden="true"></div>
+
+        <div class="relative z-10 max-w-5xl mx-auto text-center w-full">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-emerald-300 text-[10px] md:text-xs font-bold mb-8 md:mb-10 reveal">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 live-dot"></span>
+                FinCity Fleet · זמינה היום
+            </div>
+
+            <h1 id="hero-line-1" class="split-text text-4xl md:text-6xl lg:text-7xl font-black leading-[1.15] tracking-tight text-white mb-2 md:mb-3">
+                הצי שלכם מדבר.
+            </h1>
+            <h2 id="hero-line-2" class="split-text text-3xl md:text-5xl lg:text-6xl font-black leading-[1.15] tracking-tight text-gradient mb-8 md:mb-10">
+                סוף סוף יש מי שמקשיב.
+            </h2>
+
+            <p class="text-base md:text-xl text-slate-200 max-w-3xl mx-auto mb-3 md:mb-4 font-bold leading-relaxed reveal" style="transition-delay:.15s">
+                מערכת ניהול צי רכב עם AI — רכבים, נהגים, טסטים, ביטוחים ועלויות במקום אחד.
+            </p>
+            <p class="text-sm md:text-lg text-[color:var(--text-mid)] max-w-2xl mx-auto mb-10 md:mb-12 font-medium leading-relaxed reveal" style="transition-delay:.2s">
+                בלי אקסלים, בלי הפתעות בטסט — פשוט <span class="text-emerald-300 font-bold">שואלים</span> ומקבלים תשובה.
+            </p>
+
+            <!-- AI Prompt Box -->
+            <div id="ai-prompt" class="reveal max-w-2xl mx-auto mb-4" style="transition-delay:.3s">
+                <div class="glass-strong rounded-2xl px-5 md:px-6 py-4 md:py-5 flex items-center gap-3 text-right" style="border-color:rgba(52,211,153,.35);box-shadow:0 0 0 1px rgba(52,211,153,.08),0 20px 60px -20px rgba(52,211,153,.25)">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 live-dot shrink-0"></span>
+                    <span class="text-[color:var(--text-dim)] font-bold text-sm md:text-base shrink-0">שאלו את FinCity AI</span>
+                    <span class="text-[color:var(--text-dim)]">·</span>
+                    <span class="flex-1 text-sm md:text-base font-medium text-white truncate">
+                        <span id="typed-question" data-questions='["אילו רכבים צריכים טסט החודש?","אילו רכבים לא זזו 30 יום?","כמה עלה לנו הצי ברבעון האחרון?"]'></span><span class="caret text-emerald-300 font-black">|</span>
+                    </span>
+                </div>
+                <div id="ai-answer" class="mt-3 opacity-0 translate-y-2 transition-all duration-700 inline-flex items-center gap-3 glass rounded-xl px-4 py-2.5 text-xs md:text-sm font-bold">
+                    <i class="fas fa-circle-check text-emerald-300"></i>
+                    <span class="text-[color:var(--text-mid)]">נמצאו <span class="text-white font-data">3</span> רכבים שדורשים טיפול לפני סוף החודש</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-10 reveal" style="transition-delay:.45s">
+                <a href="#contact" class="btn-glow inline-flex items-center justify-center px-8 md:px-12 py-4 md:py-5 rounded-2xl text-base md:text-lg font-black w-full sm:w-auto" style="background:linear-gradient(90deg,#10b981 0%,#34d399 100%);color:#022c22">
+                    תאמו הדגמה
+                </a>
+                <a href="#fleet-live" class="btn-glow btn-outline inline-flex items-center justify-center px-8 md:px-12 py-4 md:py-5 rounded-2xl text-base md:text-lg font-bold w-full sm:w-auto">
+                    ראו את המערכת <i class="fas fa-arrow-down mr-3 text-emerald-300 text-sm"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 text-[color:var(--text-dim)] animate-bounce">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </header>
+
+    <!-- ================= LIVE ALERTS (vehicle cards) ================= -->
+    <section id="fleet-live" class="relative py-24 md:py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12 md:mb-16">
+                <p class="eyebrow mb-4 reveal">Fleet Intelligence</p>
+                <h2 class="text-3xl md:text-5xl font-black text-white leading-tight reveal">
+                    המערכת רואה את מה <span class="text-gradient">שקצין הרכב מפספס</span>
+                </h2>
+                <p class="text-base md:text-lg text-[color:var(--text-mid)] max-w-2xl mx-auto mt-5 font-medium reveal" style="transition-delay:.1s">
+                    טסט שמתקרב, ביטוח שפג, רכב שעומד — כל התראה מגיעה לפני שהיא הופכת לקנס, להשבתה או להוצאה מיותרת.
+                </p>
+            </div>
+
+            <div id="risk-cards" class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 mb-14 md:mb-20">
+                <!-- Vehicle 1 -->
+                <article class="risk-card glass-strong risk-item">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="risk-badge risk-badge--high"><i class="fas fa-triangle-exclamation text-[9px]"></i> דחוף</span>
+                        <span class="text-[10px] font-data font-bold text-[color:var(--text-dim)]">341-23-501</span>
+                    </div>
+                    <h3 class="text-xl font-black text-white mb-3">רכב איסוף · פורד טרנזיט</h3>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-clipboard-check text-[10px]"></i> טסט</span><span class="risk-row-value text-rose-400">בעוד 6 ימים</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-file-shield text-[10px]"></i> ביטוח</span><span class="risk-row-value text-[color:var(--text-mid)]">בתוקף</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-user text-[10px]"></i> נהג קבוע</span><span class="risk-row-value text-[color:var(--text-mid)]">מחלקת תברואה</span></div>
+                    <div class="ai-suggestion" style="background:linear-gradient(120deg,rgba(52,211,153,.1),rgba(16,185,129,.04));border-color:rgba(52,211,153,.25);color:#6ee7b7">
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                        <span>המלצת FinCity AI: לקבוע תור למכון רישוי השבוע</span>
+                    </div>
+                </article>
+
+                <!-- Vehicle 2 -->
+                <article class="risk-card glass-strong risk-item">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="risk-badge risk-badge--medium"><i class="fas fa-triangle-exclamation text-[9px]"></i> לתשומת לב</span>
+                        <span class="text-[10px] font-data font-bold text-[color:var(--text-dim)]">872-41-302</span>
+                    </div>
+                    <h3 class="text-xl font-black text-white mb-3">רכב פיקוח · סקודה אוקטביה</h3>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-gauge text-[10px]"></i> ק"מ מאז טיפול</span><span class="risk-row-value text-amber-300 font-data">14,800</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-clipboard-check text-[10px]"></i> טסט</span><span class="risk-row-value text-[color:var(--text-mid)]">03.27</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-user text-[10px]"></i> נהג קבוע</span><span class="risk-row-value text-[color:var(--text-mid)]">אגף הנדסה</span></div>
+                    <div class="ai-suggestion" style="background:linear-gradient(120deg,rgba(52,211,153,.1),rgba(16,185,129,.04));border-color:rgba(52,211,153,.25);color:#6ee7b7">
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                        <span>המלצת FinCity AI: לתאם טיפול 15K</span>
+                    </div>
+                </article>
+
+                <!-- Vehicle 3 -->
+                <article class="risk-card glass-strong risk-item">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="risk-badge risk-badge--medium"><i class="fas fa-circle-pause text-[9px]"></i> ללא תנועה</span>
+                        <span class="text-[10px] font-data font-bold text-[color:var(--text-dim)]">195-88-104</span>
+                    </div>
+                    <h3 class="text-xl font-black text-white mb-3">רכב תפעול · טויוטה קורולה</h3>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-road text-[10px]"></i> תנועה אחרונה</span><span class="risk-row-value text-amber-300">לפני 32 יום</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-shekel-sign text-[10px]"></i> עלות חודשית</span><span class="risk-row-value text-emerald-300" data-countup="2400" data-prefix="₪">₪0</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-user text-[10px]"></i> שיוך</span><span class="risk-row-value text-[color:var(--text-mid)]">לשכת מנכ"ל</span></div>
+                    <div class="ai-suggestion" style="background:linear-gradient(120deg,rgba(52,211,153,.1),rgba(16,185,129,.04));border-color:rgba(52,211,153,.25);color:#6ee7b7">
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                        <span>המלצת FinCity AI: לשקול ניוד או החזרה לליסינג</span>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Live KPI panel -->
+            <div class="text-center mb-8">
+                <h3 class="text-2xl md:text-4xl font-black text-white reveal">כל הצי. <span class="text-gradient">במבט אחד.</span></h3>
+            </div>
+
+            <div id="live-panel" class="glass-strong rounded-3xl p-6 md:p-10 reveal">
+                <div class="flex items-center justify-between mb-8">
+                    <h4 class="text-base md:text-xl font-black text-white">תמונת מצב · בזמן אמת</h4>
+                    <div class="flex items-center gap-2 text-xs font-bold text-emerald-300">
+                        <span>FinCity AI</span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 live-dot"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10 mb-10">
+                    <div>
+                        <p class="text-[11px] font-bold text-[color:var(--text-dim)] mb-2">רכבים בצי</p>
+                        <p class="kpi-value text-2xl md:text-4xl text-white"><span data-countup="86">0</span></p>
+                        <div class="kpi-bar-track mt-3"><div class="kpi-bar-fill bg-white/80" data-fill="100"></div></div>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-bold text-[color:var(--text-dim)] mb-2">כשירים לנסיעה</p>
+                        <p class="kpi-value text-2xl md:text-4xl text-emerald-300"><span data-countup="79">0</span></p>
+                        <div class="kpi-bar-track mt-3"><div class="kpi-bar-fill bg-emerald-400" data-fill="92"></div></div>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-bold text-[color:var(--text-dim)] mb-2">בטיפול / מוסך</p>
+                        <p class="kpi-value text-2xl md:text-4xl text-amber-300"><span data-countup="4">0</span></p>
+                        <div class="kpi-bar-track mt-3"><div class="kpi-bar-fill bg-amber-400" data-fill="18"></div></div>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-bold text-[color:var(--text-dim)] mb-2">התראות פתוחות</p>
+                        <p class="kpi-value text-2xl md:text-4xl text-rose-400"><span data-countup="7">0</span></p>
+                        <div class="kpi-bar-track mt-3"><div class="kpi-bar-fill bg-rose-400" data-fill="28"></div></div>
+                    </div>
+                </div>
+
+                <div class="mt-2 ai-suggestion" style="background:linear-gradient(120deg,rgba(52,211,153,.1),rgba(16,185,129,.04));border-color:rgba(52,211,153,.25);color:#6ee7b7">
+                    <i class="fas fa-robot"></i>
+                    <span>FinCity AI: <span class="font-data">3</span> רכבים דורשים טיפול לפני סוף החודש · <span class="font-data">1</span> רכב ללא תנועה מעל חודש</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= FEATURES ================= -->
+    <section id="features" class="py-20 md:py-28 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center md:text-right mb-12 md:mb-16">
+                <p class="eyebrow mb-4 reveal">Capabilities</p>
+                <h2 class="text-3xl md:text-5xl font-black mb-4 md:mb-6 leading-tight text-white reveal">מה המערכת עושה בשבילכם</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+                <div class="bento-dark glass-strong p-7 md:p-9 reveal">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/25 flex items-center justify-center text-emerald-300 text-xl mb-6"><i class="fas fa-bell"></i></div>
+                    <h3 class="text-xl md:text-2xl font-black mb-3 text-white">התראות לפני שזה עולה כסף</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed">טסטים, ביטוחים, רישיונות נהיגה וטיפולים תקופתיים — המערכת עוקבת ומתריעה מראש, לא בדיעבד.</p>
+                </div>
+
+                <div class="bento-dark glass-strong p-7 md:p-9 reveal" style="transition-delay:.1s">
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-400/10 border border-cyan-400/25 flex items-center justify-center text-cyan-300 text-xl mb-6"><i class="fas fa-magnifying-glass"></i></div>
+                    <h3 class="text-xl md:text-2xl font-black mb-3 text-white">חיפוש AI בשפה חופשית</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed">"אילו רכבים עברו 100 אלף ק"מ?" — שואלים כמו שמדברים, ומקבלים תשובה מהנתונים בזמן אמת.</p>
+                </div>
+
+                <div class="bento-dark glass-strong p-7 md:p-9 reveal" style="transition-delay:.15s">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center text-amber-300 text-xl mb-6"><i class="fas fa-coins"></i></div>
+                    <h3 class="text-xl md:text-2xl font-black mb-3 text-white">שליטה בעלויות</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed">דלק, טיפולים, ביטוחים וליסינג — עלות אמיתית לכל רכב ולכל מחלקה, וזיהוי רכבים שלא מצדיקים את עצמם.</p>
+                </div>
+
+                <div class="bento-dark glass-strong p-7 md:p-9 reveal" style="transition-delay:.2s">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-400/10 border border-indigo-400/25 flex items-center justify-center text-indigo-300 text-xl mb-6"><i class="fas fa-robot"></i></div>
+                    <h3 class="text-xl md:text-2xl font-black mb-3 text-white">במפת הדרכים: סוכן שמבצע</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed">השלב הבא של FinCity AI — לא רק לענות, אלא לפעול: לקבוע תור למוסך, לעדכן רשומות ולהניע תהליכי אישור.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= PLATFORM CROSS-LINK ================= -->
+    <section class="py-16 md:py-20 px-6">
+        <div class="max-w-7xl mx-auto glass rounded-3xl px-6 md:px-10 py-10 md:py-12 flex flex-col md:flex-row items-center justify-between gap-6 reveal">
+            <div class="text-center md:text-right">
+                <h3 class="text-xl md:text-2xl font-black text-white mb-2">חלק מפלטפורמת FinCity</h3>
+                <p class="text-[color:var(--text-mid)] text-sm md:text-base">אותה שכבת AI מנהלת גם את תקציבי הפיתוח של הרשות — ניהול תב"רים חכם עם OCR והתראות תקציב.</p>
+            </div>
+            <a href="index.html" class="btn-glow btn-primary inline-flex items-center justify-center px-8 py-4 rounded-2xl text-base font-black shrink-0">
+                לניהול תב"רים <i class="fas fa-arrow-left mr-2 text-sm"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- ================= CONTACT ================= -->
+    <section id="contact" class="py-24 md:py-36 px-6 text-center relative overflow-hidden">
+        <div class="max-w-4xl mx-auto relative z-10">
+            <p class="eyebrow mb-5 reveal">כל הצי. בשאלה אחת.</p>
+            <h2 class="text-4xl md:text-6xl font-black text-white mb-6 md:mb-8 leading-tight reveal">רוצים לראות את זה <span class="text-gradient">על הצי שלכם?</span></h2>
+            <p class="text-lg md:text-xl text-[color:var(--text-mid)] mb-10 md:mb-12 max-w-2xl mx-auto font-medium reveal" style="transition-delay:.1s">השאירו פרטים ונחזור אליכם לתיאום הדגמה קצרה.</p>
+
+            <form id="leadForm" data-product="פניית צי רכב" class="max-w-xl mx-auto text-right space-y-3 reveal" style="transition-delay:.2s" novalidate>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input id="leadFullName" type="text" name="fullName" required autocomplete="name" placeholder="שם מלא *"
+                        class="field-dark w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl text-base md:text-lg font-medium">
+                    <input id="leadEmail" type="email" name="email" required autocomplete="email" placeholder="דוא״ל *"
+                        class="field-dark w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl text-base md:text-lg font-medium">
+                </div>
+                <input id="leadMunicipality" type="text" name="municipality" required autocomplete="organization" placeholder="שם הארגון / הרשות *"
+                    class="field-dark w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl text-base md:text-lg font-medium">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input id="leadRole" type="text" name="role" autocomplete="organization-title" placeholder="תפקיד (אופציונלי)"
+                        class="field-dark w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl text-base md:text-lg font-medium">
+                    <input id="leadPhone" type="tel" name="phone" autocomplete="tel" placeholder="טלפון (אופציונלי)"
+                        class="field-dark w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl text-base md:text-lg font-medium">
+                </div>
+                <button id="submitBtn" type="submit"
+                    class="btn-glow w-full px-8 md:px-10 py-4 md:py-5 rounded-2xl text-lg md:text-xl font-black disabled:opacity-60 disabled:cursor-not-allowed"
+                    style="background:linear-gradient(90deg,#10b981 0%,#34d399 100%);color:#022c22">
+                    תאמו הדגמה
+                </button>
+            </form>
+
+            <p id="formMessage" class="mt-6 text-sm md:text-base font-bold hidden whitespace-pre-line max-w-xl mx-auto leading-relaxed"></p>
+            <p class="mt-5 text-[11px] md:text-xs text-[color:var(--text-dim)] font-medium">הפרטים שתשאירו משמשים ליצירת קשר בלבד.</p>
+        </div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="py-12 px-6 border-t border-[color:var(--border-soft)]">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="finCity-logo_only.png" alt="FinCity symbol" class="h-8 w-auto">
+                <img src="finCity-logotext.png" alt="FinCity wordmark" class="h-6 w-auto brightness-0 invert opacity-80">
+            </a>
+            <p class="text-[color:var(--text-dim)] font-bold text-[8px] md:text-[10px] uppercase tracking-widest text-center">© 2026 FinCity · Municipal FinTech Solutions</p>
+            <div class="flex gap-6 text-[color:var(--text-dim)]">
+                <a href="index.html" class="hover:text-cyan-300 transition-colors font-bold text-xs">ניהול תב"רים</a>
+                <a href="#" class="hover:text-cyan-300 transition-colors font-bold text-xs">פרטיות</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================= SCRIPTS ================= -->
+    <script src="assets/vendor/three.min.js"></script>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/vendor/ScrollTrigger.min.js"></script>
+
+    <script src="assets/js/hero-particles.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
+</body>
+</html>

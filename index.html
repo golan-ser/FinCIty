@@ -5,752 +5,560 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FinCity – מערכת ניהול תב"ר חכמה מבוססת AI לרשויות מקומיות</title>
     <meta name="description" content="FinCity היא מערכת ניהול תב״ר חכמה לרשויות מקומיות, מבוססת בינה מלאכותית (AI). סריקת מסמכים, בקרה תקציבית וניהול קולות קוראים בדשבורד מתקדם לגזברות עירונית.">
-    <!-- Fonts: Heebo for UI -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        :root {
-            --primary: #2563EB;
-            --dark: #0F172A;
-            --background: #F8FAFC;
-        }
 
-        body {
-            background-color: var(--background);
-            color: var(--dark);
-            font-family: 'Heebo', sans-serif;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
+    <!-- Fonts (self-hosted) -->
+    <link rel="stylesheet" href="assets/vendor/fonts.css">
 
-        .bg-gradient-mesh {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            z-index: -1;
-            background:
-                radial-gradient(circle at 8% 12%, rgba(37, 99, 235, 0.11) 0%, rgba(37, 99, 235, 0.03) 34%, transparent 62%),
-                radial-gradient(circle at 90% 82%, rgba(56, 189, 248, 0.10) 0%, rgba(14, 165, 233, 0.03) 30%, transparent 60%),
-                radial-gradient(circle at 55% 42%, rgba(59, 130, 246, 0.035) 0%, transparent 45%),
-                linear-gradient(160deg, #f8fafc 0%, #f7fbff 50%, #f9fcff 100%);
-        }
+    <!-- Icons (self-hosted) -->
+    <link rel="stylesheet" href="assets/vendor/css/fontawesome.min.css">
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
-        }
-
-        .btn-modern {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .btn-modern:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -8px rgba(37, 99, 235, 0.4); }
-
-        .dashboard-frame {
-            border-radius: 24px;
-            background: white;
-            border: 1px solid #E2E8F0;
-            box-shadow: 0 40px 80px -20px rgba(15, 23, 42, 0.15);
-        }
-        
-        .bento-item {
-            @apply bg-white rounded-3xl border border-slate-100 p-6 md:p-8 transition-all duration-500;
-        }
-        .bento-item:hover {
-            @apply border-blue-200 shadow-2xl shadow-blue-500/10 md:-translate-y-2;
-        }
-        .bento-soft {
-            border-radius: 28px;
-            box-shadow: 0 18px 40px -30px rgba(15, 23, 42, 0.35), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
-            transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease;
-        }
-        .bento-soft:hover {
-            transform: translateY(-4px) scale(1.01);
-            box-shadow: 0 24px 52px -30px rgba(37, 99, 235, 0.32), 0 10px 24px -20px rgba(14, 165, 233, 0.28);
-            border-color: rgba(147, 197, 253, 0.65);
-        }
-        .bento-top-feature {
-            border-radius: 0 26px 26px 26px;
-        }
-
-        .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s all ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* Animation for AI pulse */
-        @keyframes ai-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
-            70% { box-shadow: 0 0 0 20px rgba(37, 99, 235, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
-        }
-        .ai-active { animation: ai-pulse 2s infinite; }
-
-        /* Custom Scrollbar for the inner dashboard */
-        .dashboard-scroll::-webkit-scrollbar { width: 4px; }
-        .dashboard-scroll::-webkit-scrollbar-track { background: transparent; }
-        .dashboard-scroll::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
-
-        .ocr-premium-card {
-            background:
-                radial-gradient(circle at 85% 8%, rgba(56, 189, 248, 0.22) 0%, rgba(56, 189, 248, 0) 42%),
-                linear-gradient(145deg, #0f172a 0%, #1e293b 55%, #172554 100%);
-            border: 1px solid rgba(148, 163, 184, 0.18);
-            position: relative;
-            overflow: visible;
-            isolation: isolate;
-            padding-bottom: 44px;
-        }
-
-        .ocr-demo {
-            direction: ltr;
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.95fr);
-            gap: 12px;
-            margin-bottom: 16px;
-            padding: 12px;
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-            border: 1px solid rgba(148, 163, 184, 0.26);
-            background: linear-gradient(140deg, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.35) 100%);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-        }
-
-        .ocr-doc {
-            position: relative;
-            overflow: hidden;
-            border-radius: 14px;
-            padding: 12px 10px;
-            background: linear-gradient(180deg, rgba(248, 250, 252, 0.98) 0%, rgba(241, 245, 249, 0.96) 100%);
-            box-shadow: 0 10px 24px -16px rgba(15, 23, 42, 0.65);
-        }
-
-        .ocr-line {
-            height: 5px;
-            border-radius: 999px;
-            background: rgba(15, 23, 42, 0.14);
-            margin-bottom: 7px;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .ocr-line:last-child {
-            margin-bottom: 0;
-            width: 72%;
-        }
-
-        .ocr-line--short { width: 70%; }
-        .ocr-line--mid { width: 86%; }
-        .ocr-line--long { width: 95%; }
-
-        .ocr-line--hl::after {
-            content: "";
-            position: absolute;
-            inset: -1px 0;
-            border-radius: inherit;
-            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(56, 189, 248, 0.85) 50%, rgba(59, 130, 246, 0.15) 100%);
-            opacity: 0.18;
-            animation: ocrHighlight 3s ease-in-out infinite;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .ocr-line--hl-1::after { animation-delay: 0.35s; }
-        .ocr-line--hl-2::after { animation-delay: 1.15s; }
-        .ocr-line--hl-3::after { animation-delay: 2s; }
-
-        .ocr-scan {
-            position: absolute;
-            left: 8px;
-            right: 8px;
-            top: 0;
-            height: 3px;
-            border-radius: 999px;
-            background: linear-gradient(90deg, rgba(14, 165, 233, 0) 0%, rgba(56, 189, 248, 1) 50%, rgba(14, 165, 233, 0) 100%);
-            box-shadow: 0 0 14px rgba(56, 189, 248, 0.9);
-            animation: ocrScan 3s linear infinite;
-            z-index: 3;
-            pointer-events: none;
-        }
-
-        .ocr-fields {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            justify-content: center;
-            z-index: 1;
-        }
-
-        .ocr-copy {
-            position: relative;
-            z-index: 2;
-            padding-inline: 2px;
-        }
-
-        .ocr-field {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 6px;
-            padding: 7px 9px;
-            border-radius: 11px;
-            border: 1px solid rgba(148, 163, 184, 0.26);
-            background: rgba(15, 23, 42, 0.45);
-            color: #dbeafe;
-            font-size: 11px;
-            font-weight: 700;
-            opacity: 0.26;
-            transform: translateY(5px);
-            animation: ocrFieldFill 3s ease-in-out infinite;
-        }
-
-        .ocr-field:nth-child(2) { animation-delay: 0.85s; }
-        .ocr-field:nth-child(3) { animation-delay: 1.7s; }
-
-        .ocr-check {
-            width: 16px;
-            height: 16px;
-            border-radius: 999px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(30, 41, 59, 0.7);
-            color: #7dd3fc;
-            font-size: 10px;
-            box-shadow: inset 0 0 0 1px rgba(125, 211, 252, 0.45);
-        }
-
-        .ocr-premium-card:hover .ocr-scan,
-        .ocr-premium-card:hover .ocr-line--hl::after,
-        .ocr-premium-card:hover .ocr-field {
-            animation-duration: 2.2s;
-        }
-
-        .ocr-premium-card:hover .ocr-scan {
-            box-shadow: 0 0 18px rgba(56, 189, 248, 1);
-        }
-
-        @keyframes ocrScan {
-            0% { transform: translateY(4px); opacity: 0.9; }
-            90% { transform: translateY(calc(100% - 8px)); opacity: 1; }
-            100% { transform: translateY(calc(100% - 8px)); opacity: 0.2; }
-        }
-
-        @keyframes ocrHighlight {
-            0%, 18%, 100% { opacity: 0.15; }
-            28%, 38% { opacity: 0.95; }
-            48% { opacity: 0.2; }
-        }
-
-        @keyframes ocrFieldFill {
-            0%, 14% {
-                opacity: 0.26;
-                transform: translateY(5px);
-                border-color: rgba(148, 163, 184, 0.26);
-            }
-            25%, 58% {
-                opacity: 1;
-                transform: translateY(0);
-                border-color: rgba(56, 189, 248, 0.55);
-            }
-            70%, 100% {
-                opacity: 0.78;
-                transform: translateY(0);
-                border-color: rgba(148, 163, 184, 0.28);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .ocr-demo {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .ocr-scan,
-            .ocr-line--hl::after,
-            .ocr-field {
-                animation: none !important;
-            }
-
-            .ocr-scan {
-                top: 42%;
-                opacity: 0.55;
-            }
-
-            .ocr-line--hl::after {
-                opacity: 0.45;
-            }
-
-            .ocr-field {
-                opacity: 1;
-                transform: none;
-                border-color: rgba(56, 189, 248, 0.45);
-            }
-        }
-
-    </style>
+    <!-- Tailwind (static build) + Theme -->
+    <link rel="stylesheet" href="assets/css/tailwind.css">
+    <link rel="stylesheet" href="assets/css/theme.css">
 </head>
 <body>
 
-    <div class="bg-gradient-mesh"></div>
+    <div class="bg-void"></div>
+    <div class="bg-aurora"></div>
+    <div class="bg-grid"></div>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 px-4 md:px-6 py-4 md:py-6">
-        <div class="max-w-7xl mx-auto glass-card rounded-2xl px-4 md:px-6 py-3 flex justify-between items-center border border-white/50 shadow-2xl">
+    <!-- ================= NAV ================= -->
+    <nav class="fixed top-0 w-full z-50 px-4 md:px-6 py-3 md:py-5">
+        <div class="max-w-7xl mx-auto nav-glass rounded-2xl px-4 md:px-6 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2 md:gap-3">
-                <img src="finCity-logo_only.png" alt="FinCity symbol" class="h-8 md:h-10 w-auto" onerror="this.src='https://via.placeholder.com/40x40?text=FC'">
-                <img src="finCity-logotext.png" alt="FinCity wordmark" class="h-6 md:h-8 w-auto" onerror="this.style.display='none'">
-            </div>
-            
-            <div class="hidden lg:flex gap-10 text-sm font-bold text-slate-500">
-                <a href="#vision" class="hover:text-blue-600 transition-colors">החזון</a>
-                <a href="#system" class="hover:text-blue-600 transition-colors">המערכת</a>
-                <a href="#pilot" class="hover:text-blue-600 transition-colors">תוכנית הפיילוט</a>
+                <img src="finCity-logo_only.png" alt="FinCity symbol" class="h-8 md:h-10 w-auto">
+                <img src="finCity-logotext.png" alt="FinCity wordmark" class="h-6 md:h-8 w-auto brightness-0 invert opacity-90">
             </div>
 
-            <div class="flex items-center gap-2 md:gap-4">
-                <a href="#pilot" data-scroll-to-pilot class="btn-modern inline-flex items-center justify-center bg-blue-600 text-white px-4 md:px-7 py-2 md:py-3 rounded-xl text-xs md:text-sm font-bold shadow-lg shadow-blue-500/20">
-                    הצטרפו לפיילוט
-                </a>
+            <div class="hidden lg:flex gap-10 text-sm font-bold text-slate-400">
+                <a href="#graph" class="hover:text-cyan-300 transition-colors">איך זה מחובר</a>
+                <a href="#dashboard" class="hover:text-cyan-300 transition-colors">המערכת</a>
+                <a href="#security" class="hover:text-cyan-300 transition-colors">אבטחה ופרטיות</a>
+                <a href="#platform" class="hover:text-cyan-300 transition-colors">המוצרים</a>
+                <a href="#pilot" class="hover:text-cyan-300 transition-colors">תוכנית הפיילוט</a>
             </div>
+
+            <a href="#pilot" data-scroll-to-pilot class="btn-glow btn-primary inline-flex items-center justify-center px-4 md:px-7 py-2 md:py-3 rounded-xl text-xs md:text-sm font-black">
+                הצטרפו לפיילוט
+            </a>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <section class="pt-32 md:pt-48 pb-12 md:pb-20 px-6 overflow-hidden">
-        <div class="max-w-6xl mx-auto text-center relative z-10">
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-[10px] md:text-xs font-bold mb-6 md:mb-10 reveal shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-blue-500 ai-active"></span>
-                חדש: רשימת ההמתנה לשלב הפיילוט נפתחה
+    <!-- ================= SECTION 1: AI PROACTIVE HERO ================= -->
+    <header id="hero" class="relative min-h-screen flex flex-col justify-center overflow-hidden pt-28 pb-16 px-6">
+        <!-- Three.js particle field -->
+        <div class="absolute inset-0 z-0"><canvas id="hero-particles"></canvas></div>
+
+        <!-- Floating "lost documents" layer (video 0:01) -->
+        <div class="absolute inset-0 z-[1] pointer-events-none" id="float-docs" aria-hidden="true"></div>
+
+        <div class="relative z-10 max-w-5xl mx-auto text-center w-full">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-cyan-300 text-[10px] md:text-xs font-bold mb-8 md:mb-10 reveal">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 live-dot"></span>
+                FinCity AI · הרשות שמנהלת את עצמה
             </div>
-            
-            <h1 class="text-4xl md:text-7xl lg:text-8xl font-black mb-6 md:mb-8 text-slate-900 leading-[1.1] tracking-tighter reveal">
-                מנהלים את התקציב <br class="hidden md:block"> עם <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-500">בינה מלאכותית</span>
+
+            <h1 id="hero-line-1" class="split-text text-4xl md:text-6xl lg:text-7xl font-black leading-[1.15] tracking-tight text-white mb-2 md:mb-3">
+                התקציב כבר נמצא.
             </h1>
-            
-            <p class="text-lg md:text-2xl text-slate-500 max-w-3xl mx-auto mb-8 md:mb-12 font-medium leading-relaxed reveal" style="transition-delay: 0.1s">
-                הדור הבא של ניהול הכספים ברשויות המקומיות. טכנולוגיית AI שסורקת, מנתחת ומנגישה נתונים תקציביים בזמן אמת.
+            <h2 id="hero-line-2" class="split-text text-3xl md:text-5xl lg:text-6xl font-black leading-[1.15] tracking-tight text-gradient mb-8 md:mb-10">
+                פשוט לא מצאתם אותו.
+            </h2>
+
+            <p class="text-base md:text-xl text-slate-200 max-w-3xl mx-auto mb-3 md:mb-4 font-bold leading-relaxed reveal" style="transition-delay:.15s">
+                מערכת ניהול תב"רים מבוססת בינה מלאכותית לרשויות מקומיות —
+                מזהה תקציבים בסיכון לפני שהם חוזרים למשרד.
+            </p>
+            <p class="text-sm md:text-lg text-[color:var(--text-mid)] max-w-2xl mx-auto mb-10 md:mb-12 font-medium leading-relaxed reveal" style="transition-delay:.2s">
+                ומה אם במקום לחפש בין מערכות ודוחות — הייתם פשוט <span class="text-cyan-300 font-bold">שואלים</span>?
             </p>
 
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center reveal" style="transition-delay: 0.2s">
-                <a href="#pilot" data-scroll-to-pilot class="btn-modern inline-flex items-center justify-center bg-slate-900 text-white px-8 md:px-12 py-4 md:py-5 rounded-2xl text-base md:text-lg font-bold w-full sm:w-auto shadow-2xl">תאמו פגישת אפיון</a>
-                <button class="btn-modern bg-white text-slate-900 border border-slate-200 px-8 md:px-12 py-4 md:py-5 rounded-2xl text-base md:text-lg font-bold w-full sm:w-auto hover:bg-slate-50">איך זה עובד?</button>
+            <!-- AI Prompt Box -->
+            <div id="ai-prompt" class="reveal max-w-2xl mx-auto mb-4" style="transition-delay:.3s">
+                <div class="glass-strong glow-border rounded-2xl px-5 md:px-6 py-4 md:py-5 flex items-center gap-3 text-right">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 live-dot shrink-0"></span>
+                    <span class="text-[color:var(--text-dim)] font-bold text-sm md:text-base shrink-0">שאלו את FinCity AI</span>
+                    <span class="text-[color:var(--text-dim)]">·</span>
+                    <span class="flex-1 text-sm md:text-base font-medium text-white truncate">
+                        <span id="typed-question"></span><span class="caret text-cyan-300 font-black">|</span>
+                    </span>
+                </div>
+                <!-- AI answer chip -->
+                <div id="ai-answer" class="mt-3 opacity-0 translate-y-2 transition-all duration-700 inline-flex items-center gap-3 glass rounded-xl px-4 py-2.5 text-xs md:text-sm font-bold">
+                    <i class="fas fa-circle-check text-cyan-300"></i>
+                    <span class="text-[color:var(--text-mid)]">נמצאו <span class="text-white font-data">3</span> תב"רים בסיכון · <span class="text-rose-400 font-data">₪2.05M</span> עלולים לרדת לטמיון</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-10 reveal" style="transition-delay:.45s">
+                <a href="#pilot" data-scroll-to-pilot class="btn-glow btn-primary inline-flex items-center justify-center px-8 md:px-12 py-4 md:py-5 rounded-2xl text-base md:text-lg font-black w-full sm:w-auto">
+                    תאמו פגישת אפיון
+                </a>
+                <a href="#graph" class="btn-glow btn-outline inline-flex items-center justify-center px-8 md:px-12 py-4 md:py-5 rounded-2xl text-base md:text-lg font-bold w-full sm:w-auto">
+                    ראו איך זה עובד <i class="fas fa-arrow-down mr-3 text-cyan-300 text-sm"></i>
+                </a>
             </div>
         </div>
 
-        <!-- RESPONSIVE DASHBOARD FRAME -->
-        <div id="system" class="max-w-7xl mx-auto mt-16 md:mt-24 relative reveal px-2 md:px-0" style="transition-delay: 0.3s">
-            <div class="dashboard-frame overflow-hidden">
-                <!-- Header -->
-                <div class="bg-white border-b border-slate-100 p-3 md:p-4 flex justify-between items-center">
-                    <div class="flex items-center gap-3 md:gap-6">
-                        <div class="flex items-center gap-2">
-                            <div class="w-7 h-7 md:w-8 md:h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600"><i class="fas fa-search text-[10px]"></i></div>
-                            <span class="text-[10px] md:text-sm font-bold text-slate-400">חיפוש...</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                         <div class="text-left">
-                            <p class="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase leading-none">עיריית דוגמה</p>
-                            <p class="text-[10px] md:text-xs font-black text-slate-700">מערכת תב"רים</p>
-                         </div>
-                         <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center">
-                            <i class="fas fa-user text-slate-400 text-xs"></i>
-                         </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col md:flex-row h-auto md:h-[650px] bg-slate-50/30">
-                    <!-- Sidebar - Hidden on mobile, icons only on small tablets -->
-                    <div class="hidden sm:flex md:w-64 bg-white border-l border-slate-100 p-4 md:p-6 flex-col gap-8">
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3 p-3 rounded-xl bg-blue-50 text-blue-600 font-bold text-sm">
-                                <i class="fas fa-th-large"></i> <span class="hidden md:block">דשבורד</span>
-                            </div>
-                            <div class="flex items-center gap-3 p-3 rounded-xl text-slate-400 font-bold text-sm">
-                                <i class="fas fa-file-alt"></i> <span class="hidden md:block">תב"רים</span>
-                            </div>
-                            <div class="flex items-center gap-3 p-3 rounded-xl text-slate-400 font-bold text-sm">
-                                <i class="fas fa-chart-bar"></i> <span class="hidden md:block">דוחות</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Content Area -->
-                    <div class="flex-grow p-4 md:p-8 overflow-y-auto dashboard-scroll">
-                        <div class="mb-6 md:mb-8 text-center md:text-right">
-                            <h3 class="text-xl md:text-3xl font-black text-slate-900 mb-1">דשבורד ניהול תב"רים</h3>
-                            <p class="text-[10px] md:text-sm text-slate-400 font-bold uppercase tracking-wider">AI Insight Engine</p>
-                        </div>
-
-                        <!-- KPI Grid -->
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-8 md:mb-10">
-                            <div class="bg-white p-4 md:p-6 rounded-2xl border border-slate-100 shadow-sm relative overflow-hidden">
-                                <div class="absolute top-0 right-0 w-1 h-full bg-blue-500"></div>
-                                <p class="text-[9px] md:text-xs font-bold text-slate-400 mb-3 md:mb-4 flex items-center gap-2">
-                                    <i class="fas fa-clock text-blue-500"></i> סיום קרוב
-                                </p>
-                                <p class="text-xl md:text-3xl font-black text-slate-800">0</p>
-                            </div>
-                            <div class="bg-white p-4 md:p-6 rounded-2xl border border-slate-100 shadow-sm relative overflow-hidden">
-                                <div class="absolute top-0 right-0 w-1 h-full bg-indigo-500"></div>
-                                <p class="text-[9px] md:text-xs font-bold text-slate-400 mb-3 md:mb-4 flex items-center gap-2">
-                                    <i class="fas fa-shekel-sign text-indigo-500"></i> תקציב
-                                </p>
-                                <p class="text-xl md:text-3xl font-black text-slate-800">₪150k</p>
-                            </div>
-                            <div class="bg-white p-4 md:p-6 rounded-2xl border border-slate-100 shadow-sm relative overflow-hidden">
-                                <div class="absolute top-0 right-0 w-1 h-full bg-purple-500"></div>
-                                <p class="text-[9px] md:text-xs font-bold text-slate-400 mb-3 md:mb-4 flex items-center gap-2">
-                                    <i class="fas fa-pause-circle text-purple-500"></i> ללא תנועה
-                                </p>
-                                <p class="text-xl md:text-3xl font-black text-slate-800">2</p>
-                            </div>
-                            <div class="bg-white p-4 md:p-6 rounded-2xl border border-slate-100 shadow-sm relative overflow-hidden">
-                                <div class="absolute top-0 right-0 w-1 h-full bg-blue-400"></div>
-                                <p class="text-[9px] md:text-xs font-bold text-slate-400 mb-3 md:mb-4 flex items-center gap-2">
-                                    <i class="fas fa-file-medical text-blue-400"></i> נפתחו
-                                </p>
-                                <p class="text-xl md:text-3xl font-black text-slate-800">2</p>
-                            </div>
-                        </div>
-
-                        <!-- Charts Area -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
-                            <div class="bg-white p-5 md:p-8 rounded-2xl md:rounded-3xl border border-slate-100 shadow-sm">
-                                <h4 class="font-black text-slate-800 mb-6 flex justify-between items-center text-xs md:text-sm">
-                                    מקורות מימון
-                                    <span class="text-[8px] md:text-[10px] text-slate-400 uppercase">2025</span>
-                                </h4>
-                                <div class="flex items-center justify-center py-2 md:py-4">
-                                    <div class="relative w-32 h-32 md:w-48 md:h-48">
-                                        <svg viewBox="0 0 36 36" class="w-full h-full transform -rotate-90">
-                                            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#2563EB" stroke-width="4" stroke-dasharray="55, 100"></circle>
-                                            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#38BDF8" stroke-width="4" stroke-dasharray="25, 100" stroke-dashoffset="-55"></circle>
-                                            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#818CF8" stroke-width="4" stroke-dasharray="20, 100" stroke-dashoffset="-80"></circle>
-                                        </svg>
-                                        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-                                            <span class="text-xs font-black text-slate-800">₪13M</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-white p-5 md:p-8 rounded-2xl md:rounded-3xl border border-slate-100 shadow-sm">
-                                <h4 class="font-black text-slate-800 mb-6 text-xs md:text-sm">סטטוס דיווחים (AI Analysis)</h4>
-                                <div class="space-y-4 md:space-y-6">
-                                    <div class="h-3 md:h-4 w-full bg-slate-50 rounded-full overflow-hidden flex">
-                                        <div class="h-full bg-blue-600" style="width: 40%"></div>
-                                        <div class="h-full bg-blue-400" style="width: 30%"></div>
-                                        <div class="h-full bg-slate-200" style="width: 30%"></div>
-                                    </div>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                        <div class="flex items-center gap-2 text-[10px] md:text-[11px] font-bold text-slate-500">
-                                            <span class="w-2 h-2 rounded bg-blue-600"></span> חינוך (40%)
-                                        </div>
-                                        <div class="flex items-center gap-2 text-[10px] md:text-[11px] font-bold text-slate-500">
-                                            <span class="w-2 h-2 rounded bg-blue-400"></span> פנים (30%)
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- scroll hint -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 text-[color:var(--text-dim)] animate-bounce">
+            <i class="fas fa-chevron-down"></i>
         </div>
-    </section>
+    </header>
 
-    <!-- BENTO GRID (RESPONSIVE) -->
-    <section id="vision" class="py-20 md:py-32 px-6">
+    <!-- ================= SECTION 2: CONNECTED KNOWLEDGE GRAPH ================= -->
+    <section id="graph" class="relative py-24 md:py-32 px-6 overflow-hidden">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center md:text-right mb-12 md:mb-20 reveal">
-                <h2 class="text-3xl md:text-5xl font-black mb-4 md:mb-6 leading-tight">למה להצטרף לפיילוט?</h2>
-                <p class="text-base md:text-xl text-slate-500 max-w-3xl md:mr-0 md:ml-auto">אנחנו לא רק בונים תוכנה, אנחנו מעצבים מחדש את ניהול תקציבי הפיתוח.</p>
+            <div class="text-center mb-6 md:mb-10">
+                <p class="eyebrow mb-4 reveal">Knowledge Graph · בזמן אמת</p>
+                <h2 class="text-3xl md:text-5xl font-black text-white leading-tight reveal">
+                    FinCity AI רואה <span class="text-gradient">איך הכל מחובר</span>
+                </h2>
+                <p class="text-base md:text-lg text-[color:var(--text-mid)] max-w-2xl mx-auto mt-5 font-medium reveal" style="transition-delay:.1s">
+                    תב"רים, גורמי מימון, אישורים ואבני דרך — רשת חיה אחת.
+                    כשמשהו נשבר בשרשרת, ה-AI מזהה את זה לפני שזה עולה כסף.
+                </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-5 md:gap-6 items-stretch">
-                <!-- Main Item -->
-                <div class="md:col-span-2 xl:col-span-3 bento-item bento-soft bento-top-feature ocr-premium-card text-white reveal h-full min-h-[220px]">
-                    <div class="ocr-demo" aria-label="הדגמת OCR מיניאטורית">
-                        <div class="ocr-doc">
-                            <div class="ocr-scan"></div>
-                            <div class="ocr-line ocr-line--long"></div>
-                            <div class="ocr-line ocr-line--mid ocr-line--hl ocr-line--hl-1"></div>
-                            <div class="ocr-line ocr-line--long"></div>
-                            <div class="ocr-line ocr-line--short ocr-line--hl ocr-line--hl-2"></div>
-                            <div class="ocr-line ocr-line--mid"></div>
-                            <div class="ocr-line ocr-line--short ocr-line--hl ocr-line--hl-3"></div>
-                        </div>
-                        <div class="ocr-fields">
-                            <div class="ocr-field"><span>תקציב</span><span class="ocr-check">✓</span></div>
-                            <div class="ocr-field"><span>מחלקה</span><span class="ocr-check">✓</span></div>
-                            <div class="ocr-field"><span>שנה</span><span class="ocr-check">✓</span></div>
-                        </div>
-                    </div>
-                    <div class="ocr-copy">
-                        <h3 class="text-[1.85rem] md:text-[2.15rem] font-black leading-tight tracking-tight mb-3 md:mb-4">סריקה חכמה OCR+AI</h3>
-                        <p class="text-slate-200/90 text-sm md:text-base leading-relaxed">במקום הקלדה ידנית, המערכת "קוראת" את מסמכי התקציב, מחלצת את הסעיפים ומזינה אותם בדיוק מירבי.</p>
-                    </div>
-                </div>
+            <!-- Graph stage -->
+            <div class="graph-stage" id="graph-stage">
+                <svg id="graph-svg" class="absolute inset-0 w-full h-full" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.9"/>
+                            <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.25"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <!-- nodes injected by network-graph.js -->
+            </div>
 
-                <!-- Product Item -->
-                <div class="md:col-span-2 xl:col-span-3 bento-item bento-soft reveal h-full min-h-[220px]" style="transition-delay: 0.1s">
-                    <h3 class="text-xl md:text-2xl font-black mb-4 md:mb-6 text-slate-900">השפעה ישירה על המוצר</h3>
-                    <p class="text-slate-500 text-base md:text-lg mb-6 md:mb-8">עבודה ישירה עם המפתחים כדי להטמיע פיצ'רים שחשובים לכם באמת.</p>
-                    <ul class="space-y-3">
-                        <li class="flex items-center gap-3 text-sm md:text-base font-bold text-slate-700">
-                            <i class="fas fa-check-circle text-blue-500"></i> אפיון דוחות מותאם
-                        </li>
-                        <li class="flex items-center gap-3 text-sm md:text-base font-bold text-slate-700">
-                            <i class="fas fa-check-circle text-blue-500"></i> חיבור למערכות ה-ERP
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Secondary Items -->
-                <div class="md:col-span-1 xl:col-span-3 bento-item bento-soft reveal h-full min-h-[190px]" style="transition-delay: 0.2s">
-                    <i class="fas fa-bolt text-blue-600 text-2xl md:text-3xl mb-4 md:mb-6"></i>
-                    <h4 class="font-black text-lg md:text-xl mb-2 text-slate-900">זיהוי חריגות</h4>
-                    <p class="text-slate-500 text-xs md:text-sm">התראות אוטומטיות על תב"רים ללא תנועה לפני שמאבדים תקציבים.</p>
-                </div>
-                
-                <div class="md:col-span-1 xl:col-span-3 bento-item bento-soft reveal h-full min-h-[190px]" style="transition-delay: 0.3s">
-                    <i class="fas fa-shield-heart text-blue-600 text-2xl md:text-3xl mb-4 md:mb-6"></i>
-                    <h4 class="font-black text-lg md:text-xl mb-2 text-slate-900">אמינות הנתונים</h4>
-                    <p class="text-slate-500 text-xs md:text-sm">צמצום טעויות אנוש בהזנה ובניית "אמת ארגונית אחת".</p>
+            <div class="text-center mt-4">
+                <div class="inline-flex items-center gap-3 glass rounded-full px-5 py-2.5 text-xs md:text-sm font-bold text-[color:var(--text-mid)] reveal">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 live-dot"></span>
+                    זוהה בביטחון <span class="text-emerald-300 font-data">96%</span> · סיכון לאובדן תקציב בתב"ר 0982
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- PILOT GOALS (RESPONSIVE) -->
-    <section class="py-20 md:py-24 bg-slate-900 text-white">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <h2 class="text-2xl md:text-5xl font-black mb-12 md:mb-16 reveal">היעדים שלנו לפיילוט 2026</h2>
+    <!-- ================= SECTION 3: ELITE RISK DASHBOARD ================= -->
+    <section id="dashboard" class="relative py-24 md:py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12 md:mb-16">
+                <p class="eyebrow mb-4 reveal">AI Risk Engine</p>
+                <h2 class="text-3xl md:text-5xl font-black text-white leading-tight reveal">
+                    <span class="font-data">3</span> תב"רים. <span class="text-rose-400 font-data">₪2.05M</span> בסיכון.
+                </h2>
+                <p class="text-base md:text-lg text-[color:var(--text-mid)] max-w-2xl mx-auto mt-5 font-medium reveal" style="transition-delay:.1s">
+                    לא עוד דוחות של סוף רבעון. FinCity מציפה את הסיכון ברגע שהוא נוצר — עם המלצה מוכנה לפעולה.
+                </p>
+            </div>
+
+            <!-- Risk cards -->
+            <div id="risk-cards" class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 mb-14 md:mb-20">
+
+                <!-- Card 1 -->
+                <article class="risk-card glass-strong risk-item">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="risk-badge risk-badge--medium"><i class="fas fa-triangle-exclamation text-[9px]"></i> סיכון בינוני</span>
+                        <span class="text-[10px] font-data font-bold text-[color:var(--text-dim)]">תב"ר 1573</span>
+                    </div>
+                    <h3 class="text-xl font-black text-white mb-3">תאורת רחוב חכמה</h3>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-building-columns text-[10px]"></i> גורם מממן</span><span class="risk-row-value text-[color:var(--text-mid)]">משרד האנרגיה</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-shekel-sign text-[10px]"></i> יתרה לניצול</span><span class="risk-row-value text-emerald-300" data-countup="320000" data-prefix="₪">₪0</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-calendar text-[10px]"></i> מועד אחרון</span><span class="risk-row-value text-rose-400">30.09.26</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-file-circle-exclamation text-[10px]"></i> סטטוס</span><span class="risk-row-value text-amber-300">טרם נוצל</span></div>
+                    <div class="ai-suggestion">
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                        <span>המלצת FinCity AI: להזמין עבודה מול קבלן</span>
+                    </div>
+                    <div class="confidence-track"><div class="confidence-fill" data-confidence="92"></div></div>
+                    <p class="text-[10px] font-data font-bold text-[color:var(--text-dim)] mt-2">ביטחון 92%</p>
+                </article>
+
+                <!-- Card 2 -->
+                <article class="risk-card glass-strong risk-item">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="risk-badge risk-badge--high"><i class="fas fa-triangle-exclamation text-[9px]"></i> סיכון גבוה</span>
+                        <span class="text-[10px] font-data font-bold text-[color:var(--text-dim)]">תב"ר 1247</span>
+                    </div>
+                    <h3 class="text-xl font-black text-white mb-3">שיפוץ בית ספר</h3>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-building-columns text-[10px]"></i> גורם מממן</span><span class="risk-row-value text-[color:var(--text-mid)]">משרד החינוך</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-shekel-sign text-[10px]"></i> יתרה לניצול</span><span class="risk-row-value text-emerald-300" data-countup="480000" data-prefix="₪">₪0</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-calendar text-[10px]"></i> מועד אחרון</span><span class="risk-row-value text-rose-400">31.12.26</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-file-circle-exclamation text-[10px]"></i> סטטוס</span><span class="risk-row-value text-rose-400">דיווח חסר</span></div>
+                    <div class="ai-suggestion">
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                        <span>המלצת FinCity AI: להגיש דיווח ביצוע</span>
+                    </div>
+                    <div class="confidence-track"><div class="confidence-fill" data-confidence="97"></div></div>
+                    <p class="text-[10px] font-data font-bold text-[color:var(--text-dim)] mt-2">ביטחון 97%</p>
+                </article>
+
+                <!-- Card 3 -->
+                <article class="risk-card glass-strong risk-item">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="risk-badge risk-badge--high"><i class="fas fa-triangle-exclamation text-[9px]"></i> סיכון גבוה</span>
+                        <span class="text-[10px] font-data font-bold text-[color:var(--text-dim)]">תב"ר 0982</span>
+                    </div>
+                    <h3 class="text-xl font-black text-white mb-3">מרכז קהילתי</h3>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-building-columns text-[10px]"></i> גורם מממן</span><span class="risk-row-value text-[color:var(--text-mid)]">מפעל הפיס</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-shekel-sign text-[10px]"></i> יתרה לניצול</span><span class="risk-row-value text-emerald-300" data-countup="1250000" data-prefix="₪">₪0</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-calendar text-[10px]"></i> מועד אחרון</span><span class="risk-row-value text-rose-400">15.11.26</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-file-circle-exclamation text-[10px]"></i> סטטוס</span><span class="risk-row-value text-amber-300">ממתין לדיווח</span></div>
+                    <div class="ai-suggestion">
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                        <span>המלצת FinCity AI: לחדש אישור תקציבי</span>
+                    </div>
+                    <div class="confidence-track"><div class="confidence-fill" data-confidence="95"></div></div>
+                    <p class="text-[10px] font-data font-bold text-[color:var(--text-dim)] mt-2">ביטחון 95%</p>
+                </article>
+            </div>
+
+            <!-- Live platform KPI bar (video 0:22) -->
+            <div class="text-center mb-8">
+                <h3 class="text-2xl md:text-4xl font-black text-white reveal">הפלטפורמה. <span class="text-gradient">חיה.</span></h3>
+            </div>
+
+            <div id="live-panel" class="glass-strong rounded-3xl p-6 md:p-10 reveal">
+                <div class="flex items-center justify-between mb-8">
+                    <h4 class="text-base md:text-xl font-black text-white">מצב תקציבי · בזמן אמת</h4>
+                    <div class="flex items-center gap-2 text-xs font-bold text-cyan-300">
+                        <span>FinCity AI</span>
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 live-dot"></span>
+                    </div>
+                </div>
+
+                <!-- KPI row -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10 mb-10">
+                    <div>
+                        <p class="text-[11px] font-bold text-[color:var(--text-dim)] mb-2">תקציב כולל</p>
+                        <p class="kpi-value text-2xl md:text-4xl text-white"><span data-countup="42.6" data-decimals="1" data-prefix="₪">0</span><span class="text-sm md:text-lg">M</span></p>
+                        <div class="kpi-bar-track mt-3"><div class="kpi-bar-fill bg-white/80" data-fill="100"></div></div>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-bold text-[color:var(--text-dim)] mb-2">התקבל בפועל</p>
+                        <p class="kpi-value text-2xl md:text-4xl text-emerald-300"><span data-countup="28.9" data-decimals="1" data-prefix="₪">0</span><span class="text-sm md:text-lg">M</span></p>
+                        <div class="kpi-bar-track mt-3"><div class="kpi-bar-fill bg-emerald-400" data-fill="68"></div></div>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-bold text-[color:var(--text-dim)] mb-2">נוצל</p>
+                        <p class="kpi-value text-2xl md:text-4xl text-cyan-300"><span data-countup="31.2" data-decimals="1" data-prefix="₪">0</span><span class="text-sm md:text-lg">M</span></p>
+                        <div class="kpi-bar-track mt-3"><div class="kpi-bar-fill bg-cyan-400" data-fill="73"></div></div>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-bold text-[color:var(--text-dim)] mb-2">יתרה לניצול</p>
+                        <p class="kpi-value text-2xl md:text-4xl text-amber-300"><span data-countup="11.4" data-decimals="1" data-prefix="₪">0</span><span class="text-sm md:text-lg">M</span></p>
+                        <div class="kpi-bar-track mt-3"><div class="kpi-bar-fill bg-amber-400" data-fill="27"></div></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <!-- Reports pipeline -->
+                    <div>
+                        <p class="text-xs font-bold text-[color:var(--text-dim)] mb-4">צנרת דיווחים</p>
+                        <div class="flex gap-1.5 mb-3" dir="rtl">
+                            <div class="flex-1"><div class="kpi-bar-track"><div class="kpi-bar-fill bg-cyan-400" data-fill="100"></div></div><p class="text-[10px] font-bold text-[color:var(--text-mid)] mt-2 text-center">הוגש</p></div>
+                            <div class="flex-1"><div class="kpi-bar-track"><div class="kpi-bar-fill bg-cyan-400" data-fill="100"></div></div><p class="text-[10px] font-bold text-[color:var(--text-mid)] mt-2 text-center">בבדיקה</p></div>
+                            <div class="flex-1"><div class="kpi-bar-track"><div class="kpi-bar-fill bg-cyan-400" data-fill="100"></div></div><p class="text-[10px] font-bold text-[color:var(--text-mid)] mt-2 text-center">אושר</p></div>
+                            <div class="flex-1"><div class="kpi-bar-track"><div class="kpi-bar-fill bg-amber-400" data-fill="65"></div></div><p class="text-[10px] font-bold text-amber-300 mt-2 text-center">ממתין</p></div>
+                        </div>
+                    </div>
+                    <!-- Grants by funder -->
+                    <div>
+                        <p class="text-xs font-bold text-[color:var(--text-dim)] mb-4">מענקים לפי גורם מממן</p>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3"><span class="text-[10px] font-bold text-[color:var(--text-mid)] w-20 shrink-0">משרד החינוך</span><div class="kpi-bar-track flex-1"><div class="kpi-bar-fill bg-emerald-400" data-fill="82"></div></div></div>
+                            <div class="flex items-center gap-3"><span class="text-[10px] font-bold text-[color:var(--text-mid)] w-20 shrink-0">מפעל הפיס</span><div class="kpi-bar-track flex-1"><div class="kpi-bar-fill bg-indigo-400" data-fill="64"></div></div></div>
+                            <div class="flex items-center gap-3"><span class="text-[10px] font-bold text-[color:var(--text-mid)] w-20 shrink-0">משרד הפנים</span><div class="kpi-bar-track flex-1"><div class="kpi-bar-fill bg-cyan-400" data-fill="55"></div></div></div>
+                            <div class="flex items-center gap-3"><span class="text-[10px] font-bold text-[color:var(--text-mid)] w-20 shrink-0">משרד האנרגיה</span><div class="kpi-bar-track flex-1"><div class="kpi-bar-fill bg-amber-400" data-fill="38"></div></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI alert strip -->
+                <div class="mt-10 ai-suggestion !mt-0" style="margin-top:2.5rem !important">
+                    <i class="fas fa-robot"></i>
+                    <span>FinCity AI: <span class="font-data">3</span> תב"רים דורשים טיפול עד סוף החודש — <span class="text-rose-400 font-data">₪2.05M</span> בסיכון</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= SECURITY & PRIVACY ================= -->
+    <section id="security" class="py-20 md:py-28 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12 md:mb-16">
+                <p class="eyebrow mb-4 reveal">Security &amp; Privacy</p>
+                <h2 class="text-3xl md:text-5xl font-black text-white leading-tight reveal">
+                    הנתונים שלכם נשארים שלכם.<br class="hidden md:block">
+                    <span class="text-gradient">והמערכת לא נוגעת בכסף.</span>
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-5 md:gap-6">
+                <!-- Lead card: read-only -->
+                <div class="md:col-span-6 bento-dark glass-strong p-7 md:p-9 reveal flex flex-col md:flex-row items-start md:items-center gap-6">
+                    <div class="w-14 h-14 rounded-2xl bg-cyan-400/10 border border-cyan-400/25 flex items-center justify-center text-cyan-300 text-2xl shrink-0"><i class="fas fa-eye"></i></div>
+                    <div>
+                        <h3 class="text-xl md:text-2xl font-black mb-2 text-white">קריאה בלבד — בלי גישה לכסף</h3>
+                        <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed max-w-3xl">
+                            FinCity מנתחת מסמכים ונתונים תקציביים. היא לא מחוברת לחשבון הבנק של הרשות,
+                            לא מבצעת תשלומים ולא משנה רישומים במערכות הקיימות.
+                            ההחלטות נשארות אצלכם — המערכת רק מציפה ומתריעה.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-3 bento-dark glass-strong p-7 reveal" style="transition-delay:.05s">
+                    <div class="w-11 h-11 rounded-xl bg-indigo-400/10 border border-indigo-400/25 flex items-center justify-center text-indigo-300 text-lg mb-5"><i class="fas fa-layer-group"></i></div>
+                    <h3 class="text-lg md:text-xl font-black mb-2 text-white">כל רשות בסביבה נפרדת</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm leading-relaxed">
+                        הנתונים של כל רשות מאוחסנים בהפרדה מלאה, לא נחשפים לרשויות אחרות
+                        ולא משמשים לאימון מודלים חיצוניים.
+                    </p>
+                </div>
+
+                <div class="md:col-span-3 bento-dark glass-strong p-7 reveal" style="transition-delay:.1s">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-400/10 border border-emerald-400/25 flex items-center justify-center text-emerald-300 text-lg mb-5"><i class="fas fa-shield-halved"></i></div>
+                    <h3 class="text-lg md:text-xl font-black mb-2 text-white">הצפנה בתקן המחמיר</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm leading-relaxed">
+                        כל המידע מוצפן בתעבורה (TLS) ובאחסון (AES-256), על תשתית הענן של Microsoft Azure —
+                        התשתית שמשרתת ארגונים ממשלתיים בישראל ובעולם.
+                    </p>
+                </div>
+
+                <div class="md:col-span-3 bento-dark glass-strong p-7 reveal" style="transition-delay:.15s">
+                    <div class="w-11 h-11 rounded-xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center text-amber-300 text-lg mb-5"><i class="fas fa-filter"></i></div>
+                    <h3 class="text-lg md:text-xl font-black mb-2 text-white">עקרון הצמצום</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm leading-relaxed">
+                        קולטים רק מה שנדרש לניתוח תב"רים: מסמכי תקציב, הרשאות ודיווחים.
+                        לא פרטים אישיים של תושבים, לא מידע שאינו קשור.
+                    </p>
+                </div>
+
+                <div class="md:col-span-3 bento-dark glass-strong p-7 reveal" style="transition-delay:.2s">
+                    <div class="w-11 h-11 rounded-xl bg-cyan-400/10 border border-cyan-400/25 flex items-center justify-center text-cyan-300 text-lg mb-5"><i class="fas fa-door-open"></i></div>
+                    <h3 class="text-lg md:text-xl font-black mb-2 text-white">יציאה נקייה</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm leading-relaxed">
+                        בכל שלב — ובוודאי בסיום פיילוט — הרשות מקבלת ייצוא מלא של הנתונים,
+                        ואנחנו מוחקים את העותקים שלנו. בלי נעילה.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= PLATFORM ================= -->
+    <section id="platform" class="py-20 md:py-28 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12 md:mb-16">
+                <p class="eyebrow mb-4 reveal">The FinCity Platform</p>
+                <h2 class="text-3xl md:text-5xl font-black text-white leading-tight reveal">
+                    שכבת ה-AI של <span class="text-gradient">הרשות המקומית</span>
+                </h2>
+                <p class="text-base md:text-lg text-[color:var(--text-mid)] max-w-2xl mx-auto mt-5 font-medium reveal" style="transition-delay:.1s">
+                    מנוע בינה אחד שמכיר את הנתונים התפעוליים של הרשות —
+                    היום עונה על שאלות, בהמשך גם מבצע פעולות.
+                </p>
+            </div>
+
+            <!-- AI layer banner -->
+            <div class="glass-strong glow-border rounded-3xl p-6 md:p-8 mb-6 reveal flex flex-col md:flex-row items-start md:items-center gap-5">
+                <div class="w-14 h-14 rounded-2xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-300 text-2xl shrink-0"><i class="fas fa-brain"></i></div>
+                <div class="flex-1">
+                    <h3 class="text-xl md:text-2xl font-black text-white mb-1">FinCity AI</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed">
+                        שכבת בינה אחת מעל כל המערכות: חיפוש חופשי בשפה טבעית, תובנות והתראות בזמן אמת.
+                        במפת הדרכים — סוכן AI שגם מבצע: מכין דיווח, מזמין טיפול, מניע תהליך אישור.
+                    </p>
+                </div>
+                <span class="risk-badge risk-badge--medium shrink-0"><i class="fas fa-road text-[9px]"></i> חיפוש היום · סוכן בקרוב</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
+                <!-- Product: Tabarim (flagship) -->
+                <a href="#pilot" data-scroll-to-pilot class="bento-dark glass-strong glow-border p-7 md:p-8 reveal block">
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="w-12 h-12 rounded-2xl bg-cyan-400/10 border border-cyan-400/25 flex items-center justify-center text-cyan-300 text-xl"><i class="fas fa-shekel-sign"></i></div>
+                        <span class="risk-badge" style="background:rgba(56,189,248,.12);color:#7dd3fc;border:1px solid rgba(56,189,248,.3)">המוצר המוביל · פיילוט 2026</span>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-black mb-2 text-white">ניהול תב"רים</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed mb-5">
+                        סריקת מסמכים ב-OCR+AI, בקרה תקציבית, מעקב קולות קוראים והתראות
+                        לפני שתקציב חוזר למשרד.
+                    </p>
+                    <span class="text-cyan-300 font-bold text-sm">הצטרפו לפיילוט <i class="fas fa-arrow-left mr-1 text-xs"></i></span>
+                </a>
+
+                <!-- Product: Fleet -->
+                <a href="fleet.html" class="bento-dark glass-strong p-7 md:p-8 reveal block" style="transition-delay:.1s">
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/25 flex items-center justify-center text-emerald-300 text-xl"><i class="fas fa-car-side"></i></div>
+                        <span class="risk-badge" style="background:rgba(52,211,153,.12);color:#6ee7b7;border:1px solid rgba(52,211,153,.3)">זמינה היום</span>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-black mb-2 text-white">ניהול צי רכב</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed mb-5">
+                        כל הרכבים, הנהגים והעלויות במקום אחד — עם חיפוש AI חופשי:
+                        "אילו רכבים צריכים טסט החודש?"
+                    </p>
+                    <span class="text-emerald-300 font-bold text-sm">לדף המוצר <i class="fas fa-arrow-left mr-1 text-xs"></i></span>
+                </a>
+
+                <!-- Module: Digital signatures -->
+                <div class="bento-dark glass-strong p-7 md:p-8 reveal md:col-span-2 xl:col-span-1" style="transition-delay:.15s">
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-400/10 border border-indigo-400/25 flex items-center justify-center text-indigo-300 text-xl"><i class="fas fa-signature"></i></div>
+                        <span class="risk-badge" style="background:rgba(129,140,248,.12);color:#a5b4fc;border:1px solid rgba(129,140,248,.3)">מודול משלים</span>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-black mb-2 text-white">חתימות דיגיטליות</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed">
+                        מהמלצת ה-AI ועד חתימת הגזבר — תהליכי אישור מלאים בלי לצאת מהמערכת
+                        ובלי נייר. מובנה בשני המוצרים.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= WHY JOIN (BENTO, DARK) ================= -->
+    <section id="vision" class="py-20 md:py-28 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center md:text-right mb-12 md:mb-16">
+                <p class="eyebrow mb-4 reveal">Pilot Program 2026</p>
+                <h2 class="text-3xl md:text-5xl font-black mb-4 md:mb-6 leading-tight text-white reveal">למה להצטרף לפיילוט?</h2>
+                <p class="text-base md:text-xl text-[color:var(--text-mid)] max-w-3xl reveal" style="transition-delay:.1s">אנחנו לא רק בונים תוכנה — אנחנו מעצבים מחדש את ניהול תקציבי הפיתוח.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+                <div class="bento-dark glass-strong p-7 md:p-9 reveal">
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-400/10 border border-cyan-400/25 flex items-center justify-center text-cyan-300 text-xl mb-6"><i class="fas fa-file-invoice"></i></div>
+                    <h3 class="text-xl md:text-2xl font-black mb-3 text-white">סריקה חכמה OCR+AI</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed">במקום הקלדה ידנית, המערכת "קוראת" את מסמכי התקציב, מחלצת את הסעיפים ומזינה אותם בדיוק מירבי.</p>
+                </div>
+
+                <div class="bento-dark glass-strong p-7 md:p-9 reveal" style="transition-delay:.1s">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-400/10 border border-indigo-400/25 flex items-center justify-center text-indigo-300 text-xl mb-6"><i class="fas fa-code-branch"></i></div>
+                    <h3 class="text-xl md:text-2xl font-black mb-3 text-white">השפעה ישירה על המוצר</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed">עבודה ישירה עם המפתחים כדי להטמיע פיצ'רים שחשובים לכם באמת — אפיון דוחות מותאם וחיבור למערכות ה-ERP.</p>
+                </div>
+
+                <div class="bento-dark glass-strong p-7 md:p-9 reveal" style="transition-delay:.15s">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center text-amber-300 text-xl mb-6"><i class="fas fa-bolt"></i></div>
+                    <h3 class="text-xl md:text-2xl font-black mb-3 text-white">זיהוי חריגות</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed">התראות אוטומטיות על תב"רים ללא תנועה — לפני שמאבדים תקציבים.</p>
+                </div>
+
+                <div class="bento-dark glass-strong p-7 md:p-9 reveal" style="transition-delay:.2s">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/25 flex items-center justify-center text-emerald-300 text-xl mb-6"><i class="fas fa-shield-heart"></i></div>
+                    <h3 class="text-xl md:text-2xl font-black mb-3 text-white">אמינות הנתונים</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed">צמצום טעויות אנוש בהזנה ובניית "אמת ארגונית אחת".</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= PILOT GOALS ================= -->
+    <section class="py-20 md:py-24 px-6">
+        <div class="max-w-7xl mx-auto glass rounded-3xl px-6 py-14 md:py-16 text-center">
+            <h2 class="text-2xl md:text-4xl font-black mb-12 md:mb-14 text-white reveal">היעדים שלנו לפיילוט 2026</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 w-full">
                 <div class="reveal">
-                    <p class="text-3xl md:text-5xl font-black mb-2 text-blue-400 italic">24/7</p>
-                    <p class="text-slate-400 font-bold uppercase text-[8px] md:text-[10px] tracking-widest">ניטור נתונים</p>
+                    <p class="text-3xl md:text-5xl font-black mb-2 text-cyan-300 font-data">24/7</p>
+                    <p class="text-[color:var(--text-dim)] font-bold uppercase text-[9px] md:text-[10px] tracking-widest">ניטור נתונים</p>
                 </div>
-                <div class="reveal" style="transition-delay: 0.1s">
-                    <p class="text-3xl md:text-5xl font-black mb-2 text-blue-400 italic">99.8%</p>
-                    <p class="text-slate-400 font-bold uppercase text-[8px] md:text-[10px] tracking-widest">דיוק בסריקה</p>
+                <div class="reveal" style="transition-delay:.1s">
+                    <p class="text-3xl md:text-5xl font-black mb-2 text-cyan-300 font-data"><span data-countup="99">0</span>%+</p>
+                    <p class="text-[color:var(--text-dim)] font-bold uppercase text-[9px] md:text-[10px] tracking-widest">יעד דיוק בסריקה</p>
                 </div>
-                <div class="reveal" style="transition-delay: 0.2s">
-                    <p class="text-3xl md:text-5xl font-black mb-2 text-blue-400 italic">0</p>
-                    <p class="text-slate-400 font-bold uppercase text-[8px] md:text-[10px] tracking-widest">זמן הקלדה</p>
+                <div class="reveal" style="transition-delay:.2s">
+                    <p class="text-3xl md:text-5xl font-black mb-2 text-cyan-300 font-data">0</p>
+                    <p class="text-[color:var(--text-dim)] font-bold uppercase text-[9px] md:text-[10px] tracking-widest">זמן הקלדה</p>
                 </div>
-                <div class="reveal" style="transition-delay: 0.3s">
-                    <p class="text-3xl md:text-5xl font-black mb-2 text-blue-400 italic">100%</p>
-                    <p class="text-slate-400 font-bold uppercase text-[8px] md:text-[10px] tracking-widest">שקיפות מלאה</p>
+                <div class="reveal" style="transition-delay:.3s">
+                    <p class="text-3xl md:text-5xl font-black mb-2 text-cyan-300 font-data"><span data-countup="100">0</span>%</p>
+                    <p class="text-[color:var(--text-dim)] font-bold uppercase text-[9px] md:text-[10px] tracking-widest">שקיפות מלאה</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FINAL CTA -->
-    <section id="pilot" class="py-24 md:py-40 px-6 text-center">
-        <div class="max-w-4xl mx-auto reveal">
-            <h2 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 md:mb-8 leading-tight">מוכנים להוביל את <span class="text-blue-600">השינוי?</span></h2>
-            <p class="text-lg md:text-xl text-slate-500 mb-8 md:mb-12 max-w-2xl mx-auto font-medium">אנחנו מחפשים שותפים לדרך. הצטרפו ל-5 הרשויות הראשונות .</p>
-            
-            <form id="leadForm" class="max-w-xl mx-auto text-right space-y-3" novalidate>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <input
-                        id="leadFullName"
-                        type="text"
-                        name="fullName"
-                        required
-                        autocomplete="name"
-                        placeholder="שם מלא *"
-                        class="w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl border border-slate-200 focus:border-blue-500 outline-none text-base md:text-lg font-medium"
-                    >
-                    <input
-                        id="leadEmail"
-                        type="email"
-                        name="email"
-                        required
-                        autocomplete="email"
-                        placeholder="דוא״ל *"
-                        class="w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl border border-slate-200 focus:border-blue-500 outline-none text-base md:text-lg font-medium"
-                    >
+    <!-- ================= FINAL CTA / LEAD FORM ================= -->
+    <section id="pilot" class="py-24 md:py-36 px-6 text-center relative overflow-hidden">
+        <div class="max-w-4xl mx-auto relative z-10">
+            <p class="eyebrow mb-5 reveal">כל הידע של הרשות. בשאלה אחת.</p>
+            <h2 class="text-4xl md:text-6xl font-black text-white mb-6 md:mb-8 leading-tight reveal">מוכנים להוביל את <span class="text-gradient">השינוי?</span></h2>
+            <p class="text-lg md:text-xl text-[color:var(--text-mid)] mb-10 md:mb-12 max-w-2xl mx-auto font-medium reveal" style="transition-delay:.1s">אנחנו מחפשים שותפים לדרך. הצטרפו ל-5 הרשויות הראשונות.</p>
+
+            <!-- How the pilot works -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 max-w-3xl mx-auto mb-12 md:mb-14 text-right">
+                <div class="glass rounded-2xl p-5 reveal">
+                    <p class="font-data text-cyan-300 font-black text-lg mb-2">1</p>
+                    <h4 class="font-black text-white text-sm md:text-base mb-1">פגישת אפיון</h4>
+                    <p class="text-[color:var(--text-dim)] text-xs md:text-sm leading-relaxed">45 דקות להבין את מבנה התב"רים והצרכים של הרשות שלכם.</p>
                 </div>
-                <input
-                    id="leadMunicipality"
-                    type="text"
-                    name="municipality"
-                    required
-                    autocomplete="organization"
-                    placeholder="שם הרשות *"
-                    class="w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl border border-slate-200 focus:border-blue-500 outline-none text-base md:text-lg font-medium"
-                >
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <input
-                        id="leadRole"
-                        type="text"
-                        name="role"
-                        autocomplete="organization-title"
-                        placeholder="תפקיד (אופציונלי)"
-                        class="w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl border border-slate-200 focus:border-blue-500 outline-none text-base md:text-lg font-medium"
-                    >
-                    <input
-                        id="leadPhone"
-                        type="tel"
-                        name="phone"
-                        autocomplete="tel"
-                        placeholder="טלפון (אופציונלי)"
-                        class="w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl border border-slate-200 focus:border-blue-500 outline-none text-base md:text-lg font-medium"
-                    >
+                <div class="glass rounded-2xl p-5 reveal" style="transition-delay:.1s">
+                    <p class="font-data text-cyan-300 font-black text-lg mb-2">2</p>
+                    <h4 class="font-black text-white text-sm md:text-base mb-1">חיבור נתונים מאובטח</h4>
+                    <p class="text-[color:var(--text-dim)] text-xs md:text-sm leading-relaxed">קליטת מסמכי התקציב והדיווחים — בקריאה בלבד, בליווי צמוד שלנו.</p>
                 </div>
-                <button
-                    id="submitBtn"
-                    type="submit"
-                    class="btn-modern w-full bg-blue-600 text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl text-lg md:text-xl font-bold disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:transform-none"
-                >
+                <div class="glass rounded-2xl p-5 reveal" style="transition-delay:.2s">
+                    <p class="font-data text-cyan-300 font-black text-lg mb-2">3</p>
+                    <h4 class="font-black text-white text-sm md:text-base mb-1">תוצאות ראשונות</h4>
+                    <p class="text-[color:var(--text-dim)] text-xs md:text-sm leading-relaxed">תמונת סיכונים מלאה של כל התב"רים — תוך שבועות ספורים, בלי התחייבות ארוכת טווח.</p>
+                </div>
+            </div>
+
+            <form id="leadForm" class="max-w-xl mx-auto text-right space-y-3 reveal" style="transition-delay:.2s" novalidate>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input id="leadFullName" type="text" name="fullName" required autocomplete="name" placeholder="שם מלא *"
+                        class="field-dark w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl text-base md:text-lg font-medium">
+                    <input id="leadEmail" type="email" name="email" required autocomplete="email" placeholder="דוא״ל *"
+                        class="field-dark w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl text-base md:text-lg font-medium">
+                </div>
+                <input id="leadMunicipality" type="text" name="municipality" required autocomplete="organization" placeholder="שם הרשות *"
+                    class="field-dark w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl text-base md:text-lg font-medium">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input id="leadRole" type="text" name="role" autocomplete="organization-title" placeholder="תפקיד (אופציונלי)"
+                        class="field-dark w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl text-base md:text-lg font-medium">
+                    <input id="leadPhone" type="tel" name="phone" autocomplete="tel" placeholder="טלפון (אופציונלי)"
+                        class="field-dark w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl text-base md:text-lg font-medium">
+                </div>
+                <button id="submitBtn" type="submit"
+                    class="btn-glow btn-primary w-full px-8 md:px-10 py-4 md:py-5 rounded-2xl text-lg md:text-xl font-black disabled:opacity-60 disabled:cursor-not-allowed">
                     שלחו בקשה
                 </button>
             </form>
 
             <p id="formMessage" class="mt-6 text-sm md:text-base font-bold hidden whitespace-pre-line max-w-xl mx-auto leading-relaxed"></p>
-
-            
-            <p class="mt-8 text-[10px] md:text-sm text-slate-400 font-bold italic">* ההרשמה לפיילוט הראשוני מוגבלת.</p>
+            <p class="mt-5 text-[11px] md:text-xs text-[color:var(--text-dim)] font-medium">הפרטים שתשאירו משמשים ליצירת קשר בלבד.</p>
+            <p class="mt-3 text-[10px] md:text-sm text-[color:var(--text-dim)] font-bold">* ההרשמה לפיילוט הראשוני מוגבלת.</p>
         </div>
     </section>
 
-    <footer class="py-12 px-6 border-t border-slate-100 bg-white">
+    <!-- ================= FOOTER ================= -->
+    <footer class="py-12 px-6 border-t border-[color:var(--border-soft)]">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
             <div class="flex items-center gap-3">
                 <img src="finCity-logo_only.png" alt="FinCity symbol" class="h-8 w-auto">
-                <img src="finCity-logotext.png" alt="FinCity wordmark" class="h-6 w-auto">
+                <img src="finCity-logotext.png" alt="FinCity wordmark" class="h-6 w-auto brightness-0 invert opacity-80">
             </div>
-            <p class="text-slate-400 font-bold text-[8px] md:text-[10px] uppercase tracking-widest text-center">© 2025 FinCity AI Intelligence. פלטפורמה לניהול כספי ציבור.</p>
-            <div class="flex gap-6 text-slate-400">
-                <a href="#" class="hover:text-blue-600 transition-colors font-bold text-xs">תנאי שימוש</a>
-                <a href="#" class="hover:text-blue-600 transition-colors font-bold text-xs">פרטיות</a>
+            <p class="text-[color:var(--text-dim)] font-bold text-[8px] md:text-[10px] uppercase tracking-widest text-center">© 2026 FinCity · Municipal FinTech Solutions</p>
+            <div class="flex gap-6 text-[color:var(--text-dim)]">
+                <a href="#" class="hover:text-cyan-300 transition-colors font-bold text-xs">תנאי שימוש</a>
+                <a href="#" class="hover:text-cyan-300 transition-colors font-bold text-xs">פרטיות</a>
             </div>
         </div>
     </footer>
 
-    <script>
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('active');
-            });
-        }, { threshold: 0.05 });
+    <!-- ================= SCRIPTS ================= -->
+    <script src="assets/vendor/three.min.js"></script>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/vendor/ScrollTrigger.min.js"></script>
 
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    </script>
-    <script>
-        document.querySelectorAll('[data-scroll-to-pilot]').forEach(trigger => {
-            trigger.addEventListener('click', () => {
-                setTimeout(() => {
-                    const leadFullName = document.getElementById('leadFullName');
-                    if (leadFullName) leadFullName.focus();
-                }, 550);
-            });
-        });
-    </script>
-    <script>
-const form = document.getElementById("leadForm");
-const fullNameInput = document.getElementById("leadFullName");
-const emailInput = document.getElementById("leadEmail");
-const municipalityInput = document.getElementById("leadMunicipality");
-const roleInput = document.getElementById("leadRole");
-const phoneInput = document.getElementById("leadPhone");
-const messageBox = document.getElementById("formMessage");
-const submitBtn = document.getElementById("submitBtn");
-const submitBtnDefaultText = submitBtn.innerText;
-let isSubmitting = false;
-
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-form.addEventListener("submit", async function(e) {
-    e.preventDefault();
-
-    if (isSubmitting) return;
-
-    const fullName = fullNameInput.value.trim();
-    const email = emailInput.value.trim();
-    const municipality = municipalityInput.value.trim();
-    const role = roleInput ? roleInput.value.trim() : "";
-    const phone = phoneInput ? phoneInput.value.trim() : "";
-
-    if (!fullName) {
-        showMessage("נא להזין שם מלא.", "error");
-        fullNameInput.focus();
-        return;
-    }
-
-    if (!email || !emailPattern.test(email)) {
-        showMessage("נא להזין כתובת מייל תקינה.", "error");
-        emailInput.focus();
-        return;
-    }
-
-    if (!municipality) {
-        showMessage("נא להזין את שם הרשות.", "error");
-        municipalityInput.focus();
-        return;
-    }
-
-    isSubmitting = true;
-    submitBtn.disabled = true;
-    submitBtn.innerText = "שולח...";
-    messageBox.classList.add("hidden");
-
-    try {
-        const payload = { fullName, email, municipality, role, phone };
-
-        const response = await fetch("https://fincity-mail-func-prod.azurewebsites.net/api/sendlead", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8"
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-            throw new Error("Server error");
-        }
-
-        showMessage(
-            "תודה, הפנייה התקבלה.\nנבחן את הפרטים וניצור קשר בהתאם.",
-            "success"
-        );
-        submitBtn.innerText = "הפנייה נשלחה";
-
-    } catch (error) {
-        showMessage("משהו השתבש בשליחת הפנייה. אפשר לנסות שוב בעוד רגע.", "error");
-        submitBtn.disabled = false;
-        submitBtn.innerText = submitBtnDefaultText;
-        isSubmitting = false;
-    }
-});
-
-function showMessage(text, type) {
-    messageBox.classList.remove("hidden");
-    messageBox.innerText = text;
-
-    if (type === "success") {
-        messageBox.classList.remove("text-red-500");
-        messageBox.classList.add("text-green-600");
-    } else {
-        messageBox.classList.remove("text-green-600");
-        messageBox.classList.add("text-red-500");
-    }
-}
-</script>
-
+    <script src="assets/js/hero-particles.js" defer></script>
+    <script src="assets/js/network-graph.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
 </body>
-
 </html>

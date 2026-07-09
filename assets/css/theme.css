@@ -1,0 +1,433 @@
+/* ==========================================================================
+   FinCity — Aviation UX / Premium Fintech Dark Theme
+   ========================================================================== */
+
+:root {
+  --void: #020c1b;
+  --deep: #0a192f;
+  --deep-2: #0d213e;
+  --panel: rgba(18, 38, 68, 0.55);
+  --panel-solid: #0f2038;
+  --border-soft: rgba(125, 178, 255, 0.14);
+  --border-glow: rgba(56, 189, 248, 0.35);
+
+  --cyan: #38bdf8;
+  --cyan-bright: #7dd3fc;
+  --electric: #22d3ee;
+  --amber: #fbbf24;
+  --amber-soft: #f6c453;
+  --green: #34d399;
+  --green-bright: #4ade80;
+  --danger: #fb7185;
+  --danger-soft: #f43f5e;
+  --violet: #818cf8;
+
+  --text-hi: #eef4ff;
+  --text-mid: #a9bbdb;
+  --text-dim: #6b81a6;
+
+  --font-ui: 'Heebo', sans-serif;
+  --font-data: 'JetBrains Mono', 'Heebo', monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--text-hi);
+  font-family: var(--font-ui);
+  overflow-x: hidden;
+}
+
+::selection { background: rgba(56, 189, 248, 0.35); color: #fff; }
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.35); border-radius: 10px; }
+
+/* --------------------------------------------------------------------
+   Backdrop layers
+   -------------------------------------------------------------------- */
+.bg-void {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  background: var(--void);
+}
+
+.bg-aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 45% at 20% 8%, rgba(56, 189, 248, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 85% 25%, rgba(129, 140, 248, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(34, 211, 238, 0.08) 0%, transparent 65%),
+    linear-gradient(180deg, #020c1b 0%, #061428 30%, #071a30 60%, #020c1b 100%);
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(rgba(125, 178, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125, 178, 255, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 75%);
+}
+
+canvas#hero-particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* --------------------------------------------------------------------
+   Typography helpers
+   -------------------------------------------------------------------- */
+.font-data { font-family: var(--font-data); }
+
+.text-gradient {
+  background: linear-gradient(90deg, var(--cyan) 0%, var(--electric) 45%, var(--violet) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.eyebrow {
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  color: var(--cyan-bright);
+}
+
+/* --------------------------------------------------------------------
+   Glass surfaces
+   -------------------------------------------------------------------- */
+.glass {
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--border-soft);
+}
+
+.glass-strong {
+  background: linear-gradient(160deg, rgba(20, 42, 74, 0.75) 0%, rgba(10, 25, 47, 0.75) 100%);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.glow-border {
+  border: 1px solid var(--border-glow);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.08), 0 20px 60px -20px rgba(56, 189, 248, 0.25);
+}
+
+.nav-glass {
+  background: rgba(6, 16, 32, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-soft);
+}
+
+/* --------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------- */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.btn-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px -10px rgba(56, 189, 248, 0.55);
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #0ea5e9 0%, #22d3ee 100%);
+  color: #031425;
+}
+
+.btn-outline {
+  background: rgba(148, 178, 219, 0.06);
+  border: 1px solid var(--border-soft);
+  color: var(--text-hi);
+}
+.btn-outline:hover { border-color: var(--border-glow); background: rgba(56, 189, 248, 0.08); }
+
+/* --------------------------------------------------------------------
+   Pulse / live indicators
+   -------------------------------------------------------------------- */
+@keyframes pulse-dot {
+  0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.55); }
+  70% { box-shadow: 0 0 0 12px rgba(56, 189, 248, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+}
+.live-dot { animation: pulse-dot 2s infinite; }
+
+@keyframes blink-caret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.caret { animation: blink-caret 0.9s step-end infinite; }
+
+/* --------------------------------------------------------------------
+   Reveal utility (JS toggles .is-visible via GSAP / IO fallback)
+   -------------------------------------------------------------------- */
+.reveal { opacity: 0; transform: translateY(28px); }
+.reveal.is-visible { opacity: 1; transform: translateY(0); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* --------------------------------------------------------------------
+   Floating "lost documents" in hero (video 0:01)
+   -------------------------------------------------------------------- */
+.float-doc {
+  position: absolute;
+  border-radius: 10px;
+  background: linear-gradient(165deg, rgba(23, 45, 78, 0.85), rgba(12, 27, 50, 0.9));
+  border: 1px solid rgba(125, 178, 255, 0.12);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+  padding: 12px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: doc-drift linear infinite;
+  will-change: transform;
+}
+
+.float-doc-tab {
+  display: block;
+  height: 4px;
+  width: 45%;
+  border-radius: 999px;
+  opacity: 0.9;
+  margin-bottom: 2px;
+}
+
+.float-doc-line {
+  display: block;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(169, 187, 219, 0.28);
+}
+
+.float-doc-ring {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid;
+  border-radius: 999px;
+  opacity: 0.8;
+}
+
+@keyframes doc-drift {
+  0%   { margin-top: 0; }
+  50%  { margin-top: -60px; }
+  100% { margin-top: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float-doc { animation: none; }
+}
+
+/* --------------------------------------------------------------------
+   Network graph
+   -------------------------------------------------------------------- */
+.graph-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 560px;
+}
+
+.graph-node {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+}
+.graph-node.is-visible { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+
+.graph-node-core {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 30%, rgba(56, 189, 248, 0.35), rgba(10, 25, 47, 0.9));
+  border: 1.5px solid var(--border-glow);
+  color: var(--cyan-bright);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.35), inset 0 0 12px rgba(56, 189, 248, 0.15);
+}
+
+.graph-node--center .graph-node-core {
+  background: radial-gradient(circle at 35% 30%, rgba(34, 211, 238, 0.55), rgba(8, 20, 40, 0.95));
+  box-shadow: 0 0 45px rgba(34, 211, 238, 0.55), inset 0 0 18px rgba(34, 211, 238, 0.25);
+}
+
+.graph-node--warn .graph-node-core { color: var(--amber); border-color: rgba(251, 191, 36, 0.45); box-shadow: 0 0 24px rgba(251, 191, 36, 0.3); }
+.graph-node--danger .graph-node-core { color: var(--danger); border-color: rgba(251, 113, 133, 0.45); box-shadow: 0 0 24px rgba(251, 113, 133, 0.3); }
+.graph-node--ok .graph-node-core { color: var(--green-bright); border-color: rgba(74, 222, 128, 0.45); box-shadow: 0 0 24px rgba(74, 222, 128, 0.3); }
+
+.graph-node-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  white-space: nowrap;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+.graph-node--center .graph-node-label { color: var(--text-hi); font-size: 0.85rem; }
+
+.graph-line {
+  stroke: url(#lineGradient);
+  stroke-width: 1.5;
+  fill: none;
+  filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.5));
+  transition: stroke-width 0.3s ease, opacity 0.3s ease;
+}
+
+.graph-node-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: var(--green-bright);
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------
+   Risk cards
+   -------------------------------------------------------------------- */
+.risk-card {
+  position: relative;
+  border-radius: 22px;
+  padding: 22px;
+  overflow: hidden;
+}
+
+.risk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.risk-badge--medium { background: rgba(251, 191, 36, 0.14); color: var(--amber-soft); border: 1px solid rgba(251, 191, 36, 0.3); }
+.risk-badge--high { background: rgba(251, 113, 133, 0.14); color: var(--danger); border: 1px solid rgba(251, 113, 133, 0.3); }
+
+.risk-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(125, 178, 255, 0.08);
+  font-size: 0.85rem;
+}
+.risk-row:last-of-type { border-bottom: none; }
+.risk-row-label { color: var(--text-dim); font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.risk-row-value { font-family: var(--font-data); font-weight: 700; }
+
+.ai-suggestion {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: linear-gradient(120deg, rgba(56, 189, 248, 0.1), rgba(34, 211, 238, 0.04));
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--cyan-bright);
+}
+
+.confidence-track {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(125, 178, 255, 0.12);
+  overflow: hidden;
+  margin-top: 10px;
+}
+.confidence-fill {
+  height: 100%;
+  border-radius: 999px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--cyan), var(--green-bright));
+  transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------
+   KPI live bar
+   -------------------------------------------------------------------- */
+.kpi-value {
+  font-family: var(--font-data);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-bar-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(125, 178, 219, 0.12);
+  overflow: hidden;
+}
+.kpi-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  transition: width 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------
+   Bento (why join)
+   -------------------------------------------------------------------- */
+.bento-dark {
+  border-radius: 26px;
+  transition: transform 0.45s cubic-bezier(0.16,1,0.3,1), box-shadow 0.45s ease, border-color 0.45s ease;
+}
+.bento-dark:hover {
+  transform: translateY(-4px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 30px 60px -30px rgba(56, 189, 248, 0.35);
+}
+
+/* --------------------------------------------------------------------
+   Form fields (dark)
+   -------------------------------------------------------------------- */
+.field-dark {
+  background: rgba(12, 26, 48, 0.6);
+  border: 1px solid var(--border-soft);
+  color: var(--text-hi);
+}
+.field-dark::placeholder { color: var(--text-dim); }
+.field-dark:focus { border-color: var(--cyan); outline: none; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
+
+@media (max-width: 768px) {
+  .graph-stage { min-height: 720px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .graph-node { opacity: 1 !important; transform: translate(-50%, -50%) scale(1) !important; }
+}
