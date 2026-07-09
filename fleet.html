@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FinCity Fleet – ניהול צי רכב חכם עם AI לרשויות וארגונים</title>
-    <meta name="description" content="FinCity Fleet — מערכת ניהול צי רכב עם חיפוש AI בשפה חופשית: רכבים, נהגים, טסטים, ביטוחים, טיפולים ועלויות במקום אחד. חלק מפלטפורמת FinCity לרשויות מקומיות.">
+    <meta name="description" content="FinCity Fleet — ניהול צי רכב פשוט עם חיפוש AI: טסטים, ביטוחים, טיפולים והתראות במקום אחד, ועדכון ק״מ בהודעה. חלק מפלטפורמת FinCity לרשויות מקומיות.">
 
     <!-- Fonts (self-hosted) -->
     <link rel="stylesheet" href="assets/vendor/fonts.css">
@@ -63,7 +63,8 @@
             </h2>
 
             <p class="text-base md:text-xl text-slate-200 max-w-3xl mx-auto mb-3 md:mb-4 font-bold leading-relaxed reveal" style="transition-delay:.15s">
-                מערכת ניהול צי רכב עם AI — רכבים, נהגים, טסטים, ביטוחים ועלויות במקום אחד.
+                ניהול צי רכב פשוט — טסטים, ביטוחים, טיפולים והתראות במקום אחד.
+                אפילו עדכון הק"מ נעשה בהודעה.
             </p>
             <p class="text-sm md:text-lg text-[color:var(--text-mid)] max-w-2xl mx-auto mb-10 md:mb-12 font-medium leading-relaxed reveal" style="transition-delay:.2s">
                 בלי אקסלים, בלי הפתעות בטסט — פשוט <span class="text-emerald-300 font-bold">שואלים</span> ומקבלים תשובה.
@@ -76,7 +77,7 @@
                     <span class="text-[color:var(--text-dim)] font-bold text-sm md:text-base shrink-0">שאלו את FinCity AI</span>
                     <span class="text-[color:var(--text-dim)]">·</span>
                     <span class="flex-1 text-sm md:text-base font-medium text-white truncate">
-                        <span id="typed-question" data-questions='["אילו רכבים צריכים טסט החודש?","אילו רכבים לא זזו 30 יום?","כמה עלה לנו הצי ברבעון האחרון?"]'></span><span class="caret text-emerald-300 font-black">|</span>
+                        <span id="typed-question" data-questions='["אילו רכבים צריכים טסט החודש?","אילו רכבים לא זזו 30 יום?","מתי הטיפול הבא של הטרנזיט?"]'></span><span class="caret text-emerald-300 font-black">|</span>
                     </span>
                 </div>
                 <div id="ai-answer" class="mt-3 opacity-0 translate-y-2 transition-all duration-700 inline-flex items-center gap-3 glass rounded-xl px-4 py-2.5 text-xs md:text-sm font-bold">
@@ -109,7 +110,7 @@
                     המערכת רואה את מה <span class="text-gradient">שקצין הרכב מפספס</span>
                 </h2>
                 <p class="text-base md:text-lg text-[color:var(--text-mid)] max-w-2xl mx-auto mt-5 font-medium reveal" style="transition-delay:.1s">
-                    טסט שמתקרב, ביטוח שפג, רכב שעומד — כל התראה מגיעה לפני שהיא הופכת לקנס, להשבתה או להוצאה מיותרת.
+                    טסט שמתקרב, ביטוח שפג, טיפול שמתעכב — כל התראה מגיעה לפני שרכב מושבת או שנוסעים בלי טסט.
                 </p>
             </div>
 
@@ -154,11 +155,11 @@
                     </div>
                     <h3 class="text-xl font-black text-white mb-3">רכב תפעול · טויוטה קורולה</h3>
                     <div class="risk-row"><span class="risk-row-label"><i class="fas fa-road text-[10px]"></i> תנועה אחרונה</span><span class="risk-row-value text-amber-300">לפני 32 יום</span></div>
-                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-shekel-sign text-[10px]"></i> עלות חודשית</span><span class="risk-row-value text-emerald-300" data-countup="2400" data-prefix="₪">₪0</span></div>
+                    <div class="risk-row"><span class="risk-row-label"><i class="fas fa-gauge text-[10px]"></i> עדכון ק"מ אחרון</span><span class="risk-row-value text-amber-300">לפני 45 יום</span></div>
                     <div class="risk-row"><span class="risk-row-label"><i class="fas fa-user text-[10px]"></i> שיוך</span><span class="risk-row-value text-[color:var(--text-mid)]">לשכת מנכ"ל</span></div>
                     <div class="ai-suggestion" style="background:linear-gradient(120deg,rgba(52,211,153,.1),rgba(16,185,129,.04));border-color:rgba(52,211,153,.25);color:#6ee7b7">
                         <i class="fas fa-wand-magic-sparkles"></i>
-                        <span>המלצת FinCity AI: לשקול ניוד או החזרה לליסינג</span>
+                        <span>המלצת FinCity AI: נשלחה לנהג בקשת עדכון ק"מ בהודעה</span>
                     </div>
                 </article>
             </div>
@@ -212,14 +213,18 @@
     <section id="features" class="py-20 md:py-28 px-6">
         <div class="max-w-7xl mx-auto">
             <div class="text-center md:text-right mb-12 md:mb-16">
-                <p class="eyebrow mb-4 reveal">Capabilities</p>
+                <p class="eyebrow mb-4 reveal">Simple by Design</p>
                 <h2 class="text-3xl md:text-5xl font-black mb-4 md:mb-6 leading-tight text-white reveal">מה המערכת עושה בשבילכם</h2>
+                <p class="text-base md:text-xl text-[color:var(--text-mid)] max-w-3xl reveal" style="transition-delay:.1s">
+                    העיקרון שלנו: פשטות. בלי מודולים מיותרים ובלי מסכים עמוסים —
+                    רק מה שמנהל הצי באמת צריך, בממשק שלומדים בדקות.
+                </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
                 <div class="bento-dark glass-strong p-7 md:p-9 reveal">
                     <div class="w-12 h-12 rounded-2xl bg-emerald-400/10 border border-emerald-400/25 flex items-center justify-center text-emerald-300 text-xl mb-6"><i class="fas fa-bell"></i></div>
-                    <h3 class="text-xl md:text-2xl font-black mb-3 text-white">התראות לפני שזה עולה כסף</h3>
+                    <h3 class="text-xl md:text-2xl font-black mb-3 text-white">התראות לפני שרכב נתקע</h3>
                     <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed">טסטים, ביטוחים, רישיונות נהיגה וטיפולים תקופתיים — המערכת עוקבת ומתריעה מראש, לא בדיעבד.</p>
                 </div>
 
@@ -230,9 +235,9 @@
                 </div>
 
                 <div class="bento-dark glass-strong p-7 md:p-9 reveal" style="transition-delay:.15s">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center text-amber-300 text-xl mb-6"><i class="fas fa-coins"></i></div>
-                    <h3 class="text-xl md:text-2xl font-black mb-3 text-white">שליטה בעלויות</h3>
-                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed">דלק, טיפולים, ביטוחים וליסינג — עלות אמיתית לכל רכב ולכל מחלקה, וזיהוי רכבים שלא מצדיקים את עצמם.</p>
+                    <div class="w-12 h-12 rounded-2xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center text-amber-300 text-xl mb-6"><i class="fas fa-comment-sms"></i></div>
+                    <h3 class="text-xl md:text-2xl font-black mb-3 text-white">עדכון ק"מ בהודעה</h3>
+                    <p class="text-[color:var(--text-mid)] text-sm md:text-base leading-relaxed">הנהג שולח את מספר הק"מ בהודעה — והמערכת מתעדכנת לבד. בלי טפסים, בלי הקלדות, בלי לרדוף אחרי אף אחד.</p>
                 </div>
 
                 <div class="bento-dark glass-strong p-7 md:p-9 reveal" style="transition-delay:.2s">
