@@ -14,8 +14,12 @@ function optionalField(label, value) {
     return `<tr><td style="padding:8px 0;color:#64748B;font-weight:700;">${label}</td><td style="padding:8px 0;color:#0F172A;"${dir}>${display}</td></tr>`;
 }
 
+const { getProduct } = require("../lib/products");
+
 function buildInternalEmail({ lead, submittedAt } = {}) {
-    const subject = `ליד חדש מ־Fincity — ${lead.municipality}`;
+    const product = getProduct(lead?.product);
+    const subject = `ליד חדש מ־Fincity — ${product.shortLabel} — ${lead.municipality}`;
+    const sourceLabel = `דף נחיתה Fincity — ${product.label}`;
 
     const html = `<!DOCTYPE html>
 <html lang="he" dir="rtl">
@@ -28,15 +32,16 @@ function buildInternalEmail({ lead, submittedAt } = {}) {
           <tr>
             <td style="padding:28px 32px;">
               <h1 style="margin:0 0 8px;font-size:22px;color:#2563EB;">ליד חדש מדף הנחיתה</h1>
-              <p style="margin:0 0 24px;color:#64748B;font-size:14px;">Fincity · דף נחיתה</p>
+              <p style="margin:0 0 24px;color:#64748B;font-size:14px;">Fincity · ${escapeHtml(product.label)}</p>
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="font-size:15px;line-height:1.6;">
+                <tr><td style="padding:8px 0;color:#64748B;font-weight:700;width:140px;">מוצר</td><td style="padding:8px 0;color:#2563EB;font-weight:700;">${escapeHtml(product.label)}</td></tr>
                 <tr><td style="padding:8px 0;color:#64748B;font-weight:700;width:140px;">שם מלא</td><td style="padding:8px 0;color:#0F172A;">${escapeHtml(lead.fullName)}</td></tr>
                 <tr><td style="padding:8px 0;color:#64748B;font-weight:700;">מייל</td><td style="padding:8px 0;color:#0F172A;direction:ltr;text-align:right;">${escapeHtml(lead.email)}</td></tr>
                 <tr><td style="padding:8px 0;color:#64748B;font-weight:700;">שם הרשות</td><td style="padding:8px 0;color:#0F172A;">${escapeHtml(lead.municipality)}</td></tr>
                 ${optionalField("תפקיד", lead.role)}
                 ${optionalField("טלפון", lead.phone)}
                 <tr><td style="padding:8px 0;color:#64748B;font-weight:700;">תאריך ושעה</td><td style="padding:8px 0;color:#0F172A;">${escapeHtml(submittedAt)}</td></tr>
-                <tr><td style="padding:8px 0;color:#64748B;font-weight:700;">מקור</td><td style="padding:8px 0;color:#0F172A;">דף נחיתה Fincity</td></tr>
+                <tr><td style="padding:8px 0;color:#64748B;font-weight:700;">מקור</td><td style="padding:8px 0;color:#0F172A;">${escapeHtml(sourceLabel)}</td></tr>
               </table>
             </td>
           </tr>
@@ -50,13 +55,14 @@ function buildInternalEmail({ lead, submittedAt } = {}) {
     const textLines = [
         "ליד חדש מדף הנחיתה Fincity",
         "",
+        `מוצר: ${product.label}`,
         `שם מלא: ${lead.fullName}`,
         `מייל: ${lead.email}`,
         `שם הרשות: ${lead.municipality}`,
         `תפקיד: ${lead.role || "לא נמסר"}`,
         `טלפון: ${lead.phone || "לא נמסר"}`,
         `תאריך ושעה: ${submittedAt}`,
-        "מקור: דף נחיתה Fincity"
+        `מקור: ${sourceLabel}`
     ];
 
     return {

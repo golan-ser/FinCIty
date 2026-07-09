@@ -1,3 +1,5 @@
+const { getProduct } = require("../lib/products");
+
 const LOGO_ICON_URL = process.env.MAIL_LOGO_ICON_URL || "https://www.fincity.co.il/finCity-logo_only.png";
 const LOGO_TEXT_URL = process.env.MAIL_LOGO_TEXT_URL || "https://www.fincity.co.il/finCity-logotext.png";
 
@@ -23,12 +25,17 @@ function endPunct(content, mark) {
 }
 
 function buildAutoReplyEmail({ lead, replyToEmail = "" } = {}) {
+    const product = getProduct(lead?.product);
     const fullNameRaw = String(lead?.fullName || "").trim();
     const municipalityRaw = String(lead?.municipality || "").trim();
     const fullName = fullNameRaw ? escapeHtml(fullNameRaw) : null;
     const municipality = municipalityRaw ? escapeHtml(municipalityRaw) : null;
-    const subject = "קיבלנו את פנייתך ל־Fincity";
-    const fincity = ltr("Fincity");
+    const subject = `קיבלנו את פנייתך ל־${product.brand}`;
+    const fincity = ltr(escapeHtml(product.brand));
+    const taglineHtml = escapeHtml(product.tagline);
+    const brandHtml = escapeHtml(product.brand);
+    const descriptionHtml = escapeHtml(product.autoReplyDescription).replace(brandHtml, ltr(brandHtml));
+    const orgLabel = escapeHtml(product.orgLabel);
 
     const greeting = fullName
         ? `<p dir="rtl" style="margin:0 0 22px;font-size:20px;line-height:1.6;font-weight:800;color:#0F172A;text-align:right;direction:rtl;">שלום ${fullName}&#8206;,</p>`
@@ -47,7 +54,7 @@ function buildAutoReplyEmail({ lead, replyToEmail = "" } = {}) {
             : "",
         municipality
             ? `<tr>
-                <td dir="rtl" style="padding:6px 0;font-size:14px;line-height:1.7;color:#64748B;text-align:right;width:120px;vertical-align:top;">רשות</td>
+                <td dir="rtl" style="padding:6px 0;font-size:14px;line-height:1.7;color:#64748B;text-align:right;width:120px;vertical-align:top;">${orgLabel}</td>
                 <td dir="rtl" style="padding:6px 0;font-size:15px;line-height:1.7;color:#0F172A;font-weight:700;text-align:right;vertical-align:top;">${municipality}</td>
               </tr>`
             : ""
@@ -94,7 +101,7 @@ function buildAutoReplyEmail({ lead, replyToEmail = "" } = {}) {
                   </td>
                 </tr>
               </table>
-              <p dir="rtl" style="margin:12px 0 0;font-size:12px;line-height:1.5;font-weight:700;color:#64748B;text-align:center;">AI לניהול תב&quot;רים לרשויות מקומיות</p>
+              <p dir="rtl" style="margin:12px 0 0;font-size:12px;line-height:1.5;font-weight:700;color:#64748B;text-align:center;">${taglineHtml}</p>
             </td>
           </tr>
           <tr>
@@ -106,7 +113,7 @@ function buildAutoReplyEmail({ lead, replyToEmail = "" } = {}) {
 
               ${rtlLine(endPunct(`תודה שפנית אלינו בנוגע ל־${fincity}`, "."))}
               ${municipalityLine}
-              ${rtlLine(endPunct(`${fincity} היא מערכת AI לניהול תב&quot;רים, הרשאות, מסמכים, דיווחים ומעקב תקציבי — במטרה לעזור לרשויות לעבוד בצורה פשוטה, מסודרת וחכמה יותר, ולרכז במקום אחד את המידע, המסמכים והמשימות הקשורות לתקציבים ייעודיים`, "."))}
+              ${rtlLine(descriptionHtml)}
               ${rtlLine(endPunct("לאחר בחינת הפנייה, ניצור קשר במידת הצורך לצורך היכרות קצרה, הבנת הצרכים והצגת האפשרויות הרלוונטיות עבורכם", "."), "24px")}
 
               ${detailsBlock}
@@ -116,7 +123,7 @@ function buildAutoReplyEmail({ lead, replyToEmail = "" } = {}) {
                   <td dir="rtl" style="padding-top:24px;text-align:right;">
                     <p dir="rtl" style="margin:0 0 8px;font-size:16px;line-height:1.7;color:#334155;text-align:right;">בברכה,</p>
                     <p dir="rtl" style="margin:0 0 4px;font-size:17px;line-height:1.6;font-weight:800;color:#0F172A;text-align:right;">שלו</p>
-                    <p dir="rtl" style="margin:0;font-size:15px;line-height:1.6;color:#64748B;text-align:right;direction:rtl;">מנכ&quot;ל&#8206; ${fincity}</p>
+                    <p dir="rtl" style="margin:0;font-size:15px;line-height:1.6;color:#64748B;text-align:right;direction:rtl;">מנכ&quot;ל&#8206; ${ltr("Fincity")}</p>
                   </td>
                 </tr>
               </table>
@@ -124,7 +131,7 @@ function buildAutoReplyEmail({ lead, replyToEmail = "" } = {}) {
           </tr>
           <tr>
             <td dir="rtl" style="padding:18px 36px 24px;background-color:#FAFBFC;border-top:1px solid #EEF2F7;text-align:center;">
-              <p dir="rtl" style="margin:0;font-size:12px;line-height:1.7;color:#94A3B8;text-align:center;">${fincity} · מערכת AI לניהול תב&quot;רים לרשויות מקומיות</p>
+              <p dir="rtl" style="margin:0;font-size:12px;line-height:1.7;color:#94A3B8;text-align:center;">${fincity} · ${taglineHtml}</p>
             </td>
           </tr>
         </table>
@@ -141,17 +148,17 @@ function buildAutoReplyEmail({ lead, replyToEmail = "" } = {}) {
     const text = [
         fullNameRaw ? `שלום ${fullNameRaw},` : "שלום,",
         "",
-        "תודה שפנית אלינו בנוגע ל-Fincity.",
+        `תודה שפנית אלינו בנוגע ל-${product.brand}.`,
         "",
         textMunicipalityLine,
         "",
-        "Fincity היא מערכת AI לניהול תב\"רים, הרשאות, מסמכים, דיווחים ומעקב תקציבי — במטרה לעזור לרשויות לעבוד בצורה פשוטה, מסודרת וחכמה יותר, ולרכז במקום אחד את המידע, המסמכים והמשימות הקשורות לתקציבים ייעודיים.",
+        product.autoReplyDescription,
         "",
         "לאחר בחינת הפנייה, ניצור קשר במידת הצורך לצורך היכרות קצרה, הבנת הצרכים והצגת האפשרויות הרלוונטיות עבורכם.",
         "",
         "פרטי הפנייה:",
         fullNameRaw ? `שם הפונה: ${fullNameRaw}` : null,
-        municipalityRaw ? `רשות: ${municipalityRaw}` : null,
+        municipalityRaw ? `${product.orgLabel}: ${municipalityRaw}` : null,
         "",
         "בברכה,",
         "שלו",

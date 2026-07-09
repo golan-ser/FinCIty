@@ -298,11 +298,12 @@
       messageBox.classList.add('hidden');
 
       try {
-        // Tag which product page the lead came from (form data-product attr)
-        var product = form.dataset.product;
-        if (product) role = role ? role + ' · ' + product : product;
-
-        var payload = { fullName: fullName, email: email, municipality: municipality, role: role, phone: phone };
+        // Which product page the lead came from (form data-product attr; backend defaults to tabarim)
+        var payload = {
+          fullName: fullName, email: email, municipality: municipality,
+          role: role, phone: phone,
+          product: form.dataset.product || 'tabarim'
+        };
 
         var response = await fetch('https://fincity-mail-func-prod.azurewebsites.net/api/sendlead', {
           method: 'POST',

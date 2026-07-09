@@ -11,13 +11,16 @@ function displayOptional(value) {
     return value ? escapeHtml(value) : "לא נמסר";
 }
 
+const { getProduct } = require("../lib/products");
+
 function buildCeoNotificationEmail({ lead } = {}) {
+    const product = getProduct(lead?.product);
     const fullName = escapeHtml(lead?.fullName || "");
     const municipality = escapeHtml(lead?.municipality || "");
     const email = escapeHtml(lead?.email || "");
     const role = displayOptional(lead?.role);
     const phone = displayOptional(lead?.phone);
-    const subject = `פנייה חדשה מ־Fincity — ${lead?.municipality || ""}`;
+    const subject = `פנייה חדשה מ־Fincity — ${product.shortLabel} — ${lead?.municipality || ""}`;
 
     const html = `<!DOCTYPE html>
 <html lang="he" dir="rtl">
@@ -41,6 +44,7 @@ function buildCeoNotificationEmail({ lead } = {}) {
                 <tr>
                   <td style="padding:20px;">
                     <p style="margin:0 0 16px;font-size:13px;font-weight:700;color:#64748B;">פרטי הפנייה</p>
+                    <p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:#334155;"><span style="color:#64748B;font-weight:700;">מוצר:</span> <strong style="color:#2563EB;font-size:17px;">${escapeHtml(product.label)}</strong></p>
                     <p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:#334155;"><span style="color:#64748B;font-weight:700;">שם מלא:</span> <strong style="color:#0F172A;font-size:17px;">${fullName}</strong></p>
                     <p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:#334155;"><span style="color:#64748B;font-weight:700;">רשות:</span> <strong style="color:#2563EB;font-size:17px;">${municipality}</strong></p>
                     <p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:#334155;"><span style="color:#64748B;font-weight:700;">מייל:</span> <span style="direction:ltr;display:inline-block;">${email}</span></p>
@@ -68,6 +72,7 @@ function buildCeoNotificationEmail({ lead } = {}) {
         "התקבלה פנייה חדשה דרך אתר Fincity.",
         "",
         "פרטי הפנייה:",
+        `מוצר: ${product.label}`,
         `שם מלא: ${lead?.fullName || ""}`,
         `רשות: ${lead?.municipality || ""}`,
         `מייל: ${lead?.email || ""}`,

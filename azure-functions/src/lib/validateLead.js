@@ -1,3 +1,5 @@
+const { normalizeProductKey } = require("./products");
+
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function normalizeLead(body) {
@@ -29,7 +31,8 @@ function normalizeLead(body) {
             email,
             municipality,
             role,
-            phone
+            phone,
+            product: normalizeProductKey(body.product)
         }
     };
 }
